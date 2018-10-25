@@ -6,8 +6,10 @@
     "react-scripts": "2.0.5"
   },
   "dependencies": {
+    "evergreen-ui": "^4.0.2",
     "react": "^16.6.0",
-    "react-dom": "^16.6.0"
+    "react-dom": "^16.6.0",
+    "recompose": "^0.30.0"
   },
   "scripts": {
     "start": "react-scripts start",
