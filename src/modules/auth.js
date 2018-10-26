@@ -1,7 +1,7 @@
 import isEmpty from 'lodash/isEmpty.js';
 
 class Auth {
-  loading = false;
+  error = undefined;
 
   getUser = () => {
     try {
@@ -50,8 +50,6 @@ class Auth {
   login = async credentials => {
     const url = process.env.REACT_APP_API + '/api/auth/login/';
 
-    this.loading = true;
-
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -61,11 +59,9 @@ class Auth {
       body: JSON.stringify(credentials)
     });
 
-    this.loading = false;
-
     if (response.ok === false) {
-      const message = await response.text();
-      this.error = message;
+      const message = await response.json();
+      this.error = message.error;
       return;
     }
 

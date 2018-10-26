@@ -7,7 +7,7 @@ import Login from './Auth/EnhancedLogin.js';
 
 class App extends React.Component {
   render() {
-    const { isAuthenticated, onLogin, loginLoading } = this.props;
+    const { isAuthenticated, onLogin, loading, error } = this.props;
 
     if (isAuthenticated === false)
       return (
@@ -19,7 +19,7 @@ class App extends React.Component {
           justifyContent="center"
           background="tint2"
         >
-          <Login onSubmit={onLogin} loading={loginLoading} />
+          <Login onSubmit={onLogin} loading={loading} error={error} />
         </Pane>
       );
 

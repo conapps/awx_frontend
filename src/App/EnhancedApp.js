@@ -1,19 +1,34 @@
 import compose from 'recompose/compose.js';
+import withStateHandlers from 'recompose/withStateHandlers.js';
 import withHandlers from 'recompose/withHandlers.js';
-import withProps from 'recompose/withProps.js';
 import App from './App.js';
 import auth from '../modules/auth.js';
 
 const EnhancedApp = compose(
-  withHandlers({
-    onLogin: () => async credentials => {
-      auth.login(credentials);
+  withStateHandlers(
+    () => ({
+      loading: false,
+      error: auth.error,
+      isAuthenticated: auth.isAuthenticated
+    }),
+    {
+      setState: prevState => nextState => ({
+        ...prevState,
+        ...nextState
+      })
     }
-  }),
-  withProps(() => ({
-    isAuthenticated: auth.isAuthenticated,
-    loginLoading: auth.loading
-  }))
+  ),
+  withHandlers({
+    onLogin: ({ setState }) => async credentials => {
+      setState({ loading: true });
+      await auth.login(credentials);
+      setState({
+        loading: false,
+        error: auth.error,
+        isAuthenticated: auth.isAuthenticated
+      });
+    }
+  })
 )(App);
 
 export default EnhancedApp;
