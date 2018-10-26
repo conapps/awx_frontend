@@ -1,6 +1,7 @@
 import compose from 'recompose/compose.js';
 import withHandlers from 'recompose/withHandlers.js';
 import withStateHandlers from 'recompose/withStateHandlers.js';
+import isFunction from 'lodash/isFunction.js';
 
 export default withFormHandlers;
 
@@ -17,6 +18,7 @@ function withFormHandlers(form) {
     }),
     withHandlers({
       formIsValid: ({ validate, setFormErrors, form }) => () => {
+        if (!isFunction(validate)) return {};
         const formErrors = validate(form);
         setFormErrors(formErrors);
         return Object.keys(formErrors).length === 0;
