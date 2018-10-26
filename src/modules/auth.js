@@ -1,6 +1,7 @@
 import isEmpty from 'lodash/isEmpty.js';
 
 class Auth {
+  baseURL = process.env.REACT_APP_API + '/api/auth';
   loading = false;
   error = undefined;
 
@@ -48,6 +49,11 @@ class Auth {
     return !isEmpty(this.getUser());
   }
 
+  beginCall = () => {
+    this.error = undefined;
+    this.loading = true;
+  };
+
   logout = () => {
     this.user = undefined;
     this.accessToken = undefined;
@@ -58,12 +64,35 @@ class Auth {
     document.location.reload();
   };
 
-  login = async credentials => {
-    this.loading = true;
+  fetchRefreshTokens = credentials =>
+    fetch(this.baseURL + '/refresh/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
 
-    const url = process.env.REACT_APP_API + '/api/auth/login/';
+      body: JSON.stringify({ token: this.refreshToken })
+    });
 
-    const response = await fetch(url, {
+  refreshTokens = async () => {
+    this.beginCall();
+
+    const response = await this.fetchRefreshTokens();
+
+    if (response.ok === false) {
+      return this.logout();
+    }
+
+    this.loading = false;
+
+    const data = await response.json();
+    this.accessToken = data.accessToken;
+    this.idToken = data.idToken;
+    this.refreshToken = data.refreshToken;
+  };
+
+  fetchLogin = credentials =>
+    fetch(this.baseURL + '/login/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -71,6 +100,11 @@ class Auth {
 
       body: JSON.stringify(credentials)
     });
+
+  login = async credentials => {
+    this.beginCall();
+
+    const response = await this.fetchLogin(credentials);
 
     this.loading = false;
 
@@ -81,7 +115,6 @@ class Auth {
     }
 
     const data = await response.json();
-
     this.user = data.user;
     this.accessToken = data.accessToken;
     this.idToken = data.idToken;

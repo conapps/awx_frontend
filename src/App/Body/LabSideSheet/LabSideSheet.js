@@ -4,18 +4,14 @@ import LabForm from './LabForm/EnhancedLabForm.js';
 
 export default LabSidebar;
 
-function LabSidebar({ isShown, close }) {
+function LabSidebar({ isShown, close, onSubmit }) {
   return (
     <SideSheet isShown={isShown} onCloseComplete={close}>
       <Pane padding={16}>
         <Heading size={600} marginBottom={16}>
           Nuevo Laboratorio
         </Heading>
-        <LabForm
-          onSubmit={form => {
-            console.log(form);
-          }}
-        />
+        <LabForm onSubmit={onSubmit} />
       </Pane>
     </SideSheet>
   );

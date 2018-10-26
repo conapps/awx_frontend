@@ -1,10 +1,16 @@
 import React from 'react';
 import { Pane, Button } from 'evergreen-ui';
-import LabTable from './LabTable/LabTable.js';
+import LabsTable from './LabsTable/LabsTable.js';
 import LabSideSheet from './LabSideSheet/LabSideSheet.js';
 export default Body;
 
-function Body({ isSideSheetShow, openSideSheet, closeSideSheet }) {
+function Body({
+  isSideSheetShow,
+  openSideSheet,
+  closeSideSheet,
+  labs,
+  onSubmit
+}) {
   return (
     <Pane display="flex" padding={16} width="100%" flexDirection="column">
       <Pane display="flex" padding={16} width="100%">
@@ -16,10 +22,14 @@ function Body({ isSideSheetShow, openSideSheet, closeSideSheet }) {
         >
           Nuevo Laboratorio
         </Button>
-        <LabSideSheet isShown={isSideSheetShow} close={closeSideSheet} />
+        <LabSideSheet
+          isShown={isSideSheetShow}
+          close={closeSideSheet}
+          onSubmit={onSubmit}
+        />
       </Pane>
       <Pane display="flex" padding={16} width="100%">
-        <LabTable />
+        <LabsTable labs={labs} />
       </Pane>
     </Pane>
   );
