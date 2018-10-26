@@ -5,7 +5,7 @@ import Body from './Body.js';
 const EnhancedBody = compose(
   withStateHandlers(
     () => ({
-      isSideSheetShow: true
+      isSideSheetShow: false
     }),
     {
       openSideSheet: () => () => ({

@@ -1,6 +1,7 @@
 import isEmpty from 'lodash/isEmpty.js';
 
 class Auth {
+  loading = false;
   error = undefined;
 
   getUser = () => {
@@ -47,7 +48,19 @@ class Auth {
     return !isEmpty(this.getUser());
   }
 
+  logout = () => {
+    this.user = undefined;
+    this.accessToken = undefined;
+    this.idToken = undefined;
+    this.refreshToken = undefined;
+    this.error = undefined;
+    this.loading = false;
+    document.location.reload();
+  };
+
   login = async credentials => {
+    this.loading = true;
+
     const url = process.env.REACT_APP_API + '/api/auth/login/';
 
     const response = await fetch(url, {
@@ -58,6 +71,8 @@ class Auth {
 
       body: JSON.stringify(credentials)
     });
+
+    this.loading = false;
 
     if (response.ok === false) {
       const message = await response.json();

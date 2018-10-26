@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
 import { Pane } from 'evergreen-ui';
-import Header from './Header/Header.js';
+import Header from './Header/EnhancedHeader.js';
 import EnhancedBody from './Body/EnhancedBody.js';
 import Login from './Auth/EnhancedLogin.js';
 

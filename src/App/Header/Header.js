@@ -3,7 +3,7 @@ import { Pane, Heading, Button } from 'evergreen-ui';
 
 export default Header;
 
-function Header() {
+function Header({ onLogout }) {
   return (
     <Pane display="flex" padding={16} background="tint2" borderRadius={3}>
       <Pane flex={3} alignItems="center" display="flex">
@@ -19,7 +19,9 @@ function Header() {
         alignItems="center"
         justifyContent="flex-end"
       >
-        <Button appearance="primary">Iniciar sesión</Button>
+        <Button onClick={onLogout} appearance="primary">
+          Cerrar sesión
+        </Button>
       </Pane>
     </Pane>
   );
