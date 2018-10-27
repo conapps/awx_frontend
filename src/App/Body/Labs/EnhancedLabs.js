@@ -30,8 +30,14 @@ const EnhancedLabs = compose(
       labs.index();
       /** Subscribe to events */
       emitter.on('labs:update', this.props.setLabsState);
-      emitter.on('labs:update:start', this.props.setLoadingState.bind(true));
-      emitter.on('labs:update:end', this.props.setLoadingState.bind(false));
+      emitter.on(
+        'labs:update:start',
+        this.props.setLoadingState.bind(this, true)
+      );
+      emitter.on(
+        'labs:update:end',
+        this.props.setLoadingState.bind(this, false)
+      );
     },
 
     componentWillUnmount() {

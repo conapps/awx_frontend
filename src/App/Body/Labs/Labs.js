@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Pane, Button } from 'evergreen-ui';
+import { Pane, Button, Spinner, Paragraph } from 'evergreen-ui';
 import LabsTable from './LabsTable/LabsTable.js';
 import LabSideSheet from './LabSideSheet/LabSideSheet.js';
 
@@ -10,7 +10,8 @@ class Labs extends React.Component {
       openSideSheet,
       isSideSheetShow,
       closeSideSheet,
-      onSubmit
+      onSubmit,
+      loading
     } = this.props;
     return (
       <Fragment>
@@ -29,8 +30,20 @@ class Labs extends React.Component {
             onSubmit={onSubmit}
           />
         </Pane>
-        <Pane display="flex" padding={16} width="100%">
-          <LabsTable labs={labs} />
+        <Pane
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          padding={16}
+          width="100%"
+        >
+          {loading === true ? (
+            <Spinner />
+          ) : labs.length === 0 ? (
+            <Paragraph>No se han encontrado laboratorios.</Paragraph>
+          ) : (
+            <LabsTable labs={labs} />
+          )}
         </Pane>
       </Fragment>
     );

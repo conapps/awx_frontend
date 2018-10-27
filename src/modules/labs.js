@@ -16,17 +16,22 @@ class Labs extends FetchCRUD {
     this.items = data.items;
     this.next = data.next;
     this.prev = data.prev;
+
+    this.emitUpdate();
   };
 
   create = async lab => {
     const data = await this.fetchCreate(lab);
 
     this.items = [data, ...this.items];
+
+    this.emitUpdate();
   };
 
   delete = async id => {
     this.items = filter(this.items, item => item.id !== id);
     await this.fetchDelete(id);
+    this.emitUpdate();
   };
 }
 

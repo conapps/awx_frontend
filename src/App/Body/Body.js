@@ -1,15 +1,17 @@
 import React from 'react';
 import { Pane } from 'evergreen-ui';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import Labs from './Labs/EnhancedLabs.js';
+import Lab from './Lab/Lab.js';
 export default Body;
 
 function Body() {
   return (
     <Pane display="flex" padding={16} width="100%" flexDirection="column">
-      <Router>
-        <Route path="/" exact component={Labs} />
-      </Router>
+      <Switch>
+        <Route path="/labs/:id/" component={Lab} />
+        <Route exact path="/" component={Labs} />
+      </Switch>
     </Pane>
   );
 }

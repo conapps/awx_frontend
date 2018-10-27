@@ -33,7 +33,6 @@ class FetchCRUD {
     }
 
     emitter.emit(`${this.resource}:index`);
-    this.emitUpdate();
 
     return response.json();
   };
@@ -57,7 +56,6 @@ class FetchCRUD {
     }
 
     emitter.emit(`${this.resource}:create`);
-    this.emitUpdate();
 
     return response.json();
   };
@@ -80,7 +78,6 @@ class FetchCRUD {
     }
 
     emitter.emit(`${this.resource}:delete:${id}`);
-    this.emitUpdate();
 
     return response.text();
   };
