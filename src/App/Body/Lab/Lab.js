@@ -2,6 +2,10 @@ import React from 'react';
 
 export default Lab;
 
-function Lab() {
-  return <h1>Something</h1>;
+function Lab({ id, lab }) {
+  return (
+    <div>
+      <pre>{JSON.stringify(lab)}</pre>
+    </div>
+  );
 }

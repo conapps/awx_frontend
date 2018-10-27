@@ -26,24 +26,19 @@ const EnhancedLabs = compose(
     }
   ),
   lifecycle({
-    componentDidMount() {
+    componentWillMount() {
       labs.index();
       /** Subscribe to events */
       emitter.on('labs:update', this.props.setLabsState);
-      emitter.on(
-        'labs:update:start',
-        this.props.setLoadingState.bind(this, true)
-      );
-      emitter.on(
-        'labs:update:end',
-        this.props.setLoadingState.bind(this, false)
-      );
+      emitter.on('labs:update:start', this.props.setLoadingState);
+      emitter.on('labs:update:end', this.props.setLoadingState);
+      emitter.emit('header:update', 'Laboratorios');
     },
 
     componentWillUnmount() {
-      emitter.off('labs:update:start');
-      emitter.off('labs:update');
-      emitter.off('labs:update:end');
+      emitter.off('labs:update', this.props.setLabsState);
+      emitter.off('labs:update:start', this.props.setLoadingState);
+      emitter.off('labs:update:end', this.props.setLoadingState);
     }
   }),
   withHandlers({

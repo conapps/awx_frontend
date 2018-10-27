@@ -10,9 +10,12 @@ function withLoadingHandlers() {
         loading: false
       }),
       {
-        setLoadingState: () => (loading = true) => ({
-          loading
-        })
+        setLoadingState: ({ loading }) => () => {
+          console.log('loading', !loading);
+          return {
+            loading: !loading
+          };
+        }
       }
     )
   );

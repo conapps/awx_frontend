@@ -11,9 +11,12 @@ function withLabsState() {
         labs: labs.items
       }),
       {
-        setLabsState: () => () => ({
-          labs: labs.items
-        })
+        setLabsState: () => () => {
+          console.log(labs.items);
+          return {
+            labs: labs.items
+          };
+        }
       }
     )
   );

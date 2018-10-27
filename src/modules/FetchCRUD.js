@@ -1,7 +1,9 @@
+import find from 'lodash/find.js';
 import auth from './auth.js';
 import emitter from './emitter.js';
 
 class FetchCRUD {
+  items = [];
   baseURL = process.env.REACT_APP_API + '/api/v1/';
 
   constructor({ resource } = {}) {
@@ -58,6 +60,30 @@ class FetchCRUD {
     emitter.emit(`${this.resource}:create`);
 
     return response.json();
+  };
+
+  _get = id =>
+    fetch(this.baseURL + `${id}/`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth.accessToken}`
+      }
+    });
+
+  fetchGet = async id => {
+    let item = find(this.items, item => item.id === id);
+
+    if (item !== undefined) return item;
+
+    let response = await this._get(id);
+
+    if (response.ok === false && (await response.text()) === 'Unauthorized') {
+      await this.refreshTokens();
+      response = await this._get(id);
+    }
+
+    return await response.json();
   };
 
   _delete = id =>

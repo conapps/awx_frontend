@@ -19,17 +19,3 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();
-
-// Hot module replacement
-if (module.hot) {
-  module.hot.accept('./App/EnhancedApp.js', () => {
-    const NextApp = require('./App/EnhancedApp.js').default;
-
-    ReactDOM.render(
-      <Router>
-        <NextApp />
-      </Router>,
-      $rootEl
-    );
-  });
-}

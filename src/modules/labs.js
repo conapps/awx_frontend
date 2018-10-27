@@ -1,8 +1,10 @@
 import FetchCRUD from './FetchCRUD.js';
 import filter from 'lodash/filter.js';
+import emitter from './emitter.js';
 
 class Labs extends FetchCRUD {
   items = [];
+  current = undefined;
   next = undefined;
   prev = undefined;
 
@@ -25,6 +27,16 @@ class Labs extends FetchCRUD {
 
     this.items = [data, ...this.items];
 
+    this.emitUpdate();
+  };
+
+  get = async id => {
+    emitter.emit(`${this.resource}:${id}:get:start`);
+    const lab = await this.fetchGet(id);
+
+    this.current = lab;
+
+    emitter.emit(`${this.resource}:${id}:get:end`, lab);
     this.emitUpdate();
   };
 

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default Header;
 
-function Header({ onLogout }) {
+function Header({ onLogout, title }) {
   return (
     <Pane display="flex" padding={16} background="tint2" borderRadius={3}>
       <Pane flex={3} alignItems="center" display="flex">
@@ -16,7 +16,7 @@ function Header({ onLogout }) {
         &nbsp;
         <Heading size={600}>{'/'}</Heading>
         &nbsp;
-        <Heading size={600}>{'Laboratorios'}</Heading>
+        <Heading size={600}>{title}</Heading>
       </Pane>
       <Pane
         flex={2}

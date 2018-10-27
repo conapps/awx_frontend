@@ -2,7 +2,7 @@ import React from 'react';
 import { Pane } from 'evergreen-ui';
 import { Route, Switch } from 'react-router-dom';
 import Labs from './Labs/EnhancedLabs.js';
-import Lab from './Lab/Lab.js';
+import Lab from './Lab/EnhancedLab.js';
 export default Body;
 
 function Body() {
