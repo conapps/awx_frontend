@@ -1,57 +1,84 @@
 import compose from 'recompose/compose.js';
+import { connect } from 'react-redux';
+import get from 'lodash/get.js';
 import { toaster } from 'evergreen-ui';
 import withHandlers from 'recompose/withHandlers.js';
-import withStateHandlers from 'recompose/withStateHandlers.js';
 import lifecycle from 'recompose/lifecycle.js';
-import withLoadingHandlers from '../../../common/handlers/withLoadingHandlers.js';
-import withLabsState from '../../../common/handlers/withLabsState.js';
-import labs from '../../../modules/labs.js';
-import emitter from '../../../modules/emitter.js';
+import {
+  UI,
+  GET_REQUEST,
+  POST_REQUEST,
+  LABS_INDEX_SUCCESS,
+  LABS_INDEX_REQUEST,
+  LABS_INDEX_FAILURE,
+  LABS_CREATE_SUCCESS,
+  LABS_CREATE_REQUEST,
+  LABS_CREATE_FAILURE
+} from '../../../state/actions.js';
+import { labs as schema } from '../../../state/schemas.js';
+import { getLabs } from '../../../state/reducers/labs.js';
 import Labs from './Labs.js';
 
 const EnhancedLabs = compose(
-  withLoadingHandlers(),
-  withLabsState(),
-  withStateHandlers(
-    () => ({
-      isSideSheetShow: false
+  connect(
+    state => ({
+      labs: getLabs(state),
+      loading: get(state, 'ui.labs.indexLoading', false),
+      isSideSheetOpen: get(state, 'ui.labs.isSideSheetOpen', false)
     }),
     {
-      openSideSheet: () => () => ({
-        isSideSheetShow: true
+      index: () => ({
+        type: GET_REQUEST,
+        payload: {
+          endpoint: '/labs/',
+          schema,
+          actionTypes: [
+            LABS_INDEX_REQUEST,
+            LABS_INDEX_SUCCESS,
+            LABS_INDEX_FAILURE
+          ]
+        }
       }),
-      closeSideSheet: () => () => ({
-        isSideSheetShow: false
+      create: lab => ({
+        type: POST_REQUEST,
+        payload: {
+          endpoint: '/labs/',
+          body: lab,
+          schema,
+          actionTypes: [
+            LABS_CREATE_REQUEST,
+            LABS_CREATE_SUCCESS,
+            LABS_CREATE_FAILURE
+          ]
+        }
+      }),
+      openSideSheet: () => ({
+        type: UI,
+        payload: {
+          labs: {
+            isSideSheetOpen: true
+          }
+        }
+      }),
+      clodeSideSheet: () => ({
+        type: UI,
+        payload: {
+          labs: {
+            isSideSheetOpen: false
+          }
+        }
       })
     }
   ),
   lifecycle({
     componentWillMount() {
-      labs.index();
-      /** Subscribe to events */
-      emitter.on('labs:update', this.props.setLabsState);
-      emitter.on('labs:update:start', this.props.setLoadingState);
-      emitter.on('labs:update:end', this.props.setLoadingState);
-      emitter.emit('header:update', 'Laboratorios');
-    },
-
-    componentWillUnmount() {
-      emitter.off('labs:update', this.props.setLabsState);
-      emitter.off('labs:update:start', this.props.setLoadingState);
-      emitter.off('labs:update:end', this.props.setLoadingState);
+      this.props.index();
     }
   }),
   withHandlers({
-    onSubmit: ({
-      closeSideSheet,
-      setLoadingState,
-      setLabsState
-    }) => async lab => {
-      setLoadingState(true);
-      await labs.create(lab);
-      closeSideSheet();
-      setLabsState();
-      setLoadingState(false);
+    onSubmit: ({ create }) => async lab => {
+      // TODO
+      create(lab);
       toaster.success('Laboratorio creado');
     }
   })
