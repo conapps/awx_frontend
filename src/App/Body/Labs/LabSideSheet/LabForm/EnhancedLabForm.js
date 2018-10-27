@@ -1,6 +1,6 @@
 import compose from 'recompose/compose.js';
 import withHandlers from 'recompose/withHandlers.js';
-import withFormHandlers from '../../../../common/handlers/withFormHandlers.js';
+import withFormHandlers from '../../../../../common/handlers/withFormHandlers.js';
 import LabForm from './LabForm.js';
 
 const EnhancedLabForm = compose(

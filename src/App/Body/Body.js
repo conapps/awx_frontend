@@ -1,36 +1,15 @@
 import React from 'react';
-import { Pane, Button } from 'evergreen-ui';
-import LabsTable from './LabsTable/LabsTable.js';
-import LabSideSheet from './LabSideSheet/LabSideSheet.js';
+import { Pane } from 'evergreen-ui';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Labs from './Labs/EnhancedLabs.js';
 export default Body;
 
-function Body({
-  isSideSheetShow,
-  openSideSheet,
-  closeSideSheet,
-  labs,
-  onSubmit
-}) {
+function Body() {
   return (
     <Pane display="flex" padding={16} width="100%" flexDirection="column">
-      <Pane display="flex" padding={16} width="100%">
-        <Button
-          marginRight={16}
-          intent="success"
-          iconBefore="plus"
-          onClick={openSideSheet}
-        >
-          Nuevo Laboratorio
-        </Button>
-        <LabSideSheet
-          isShown={isSideSheetShow}
-          close={closeSideSheet}
-          onSubmit={onSubmit}
-        />
-      </Pane>
-      <Pane display="flex" padding={16} width="100%">
-        <LabsTable labs={labs} />
-      </Pane>
+      <Router>
+        <Route path="/" exact component={Labs} />
+      </Router>
     </Pane>
   );
 }
