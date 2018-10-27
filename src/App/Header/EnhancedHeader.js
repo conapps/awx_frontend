@@ -1,27 +1,20 @@
 import compose from 'recompose/compose.js';
-import lifecycle from 'recompose/lifecycle.js';
-import withStateHandlers from 'recompose/withStateHandlers.js';
-import withAuthHandlers from '../../common/handlers/withAuthHandlers.js';
-import emitter from '../../modules/emitter.js';
+import { connect } from 'react-redux';
+import get from 'lodash/get.js';
+import { LOGOUT } from '../../state/actions.js';
 import Header from './Header.js';
 
 const EnhancedHeader = compose(
-  withAuthHandlers(),
-  withStateHandlers(
-    () => ({
-      title: ''
+  connect(
+    state => ({
+      title: get(state, 'ui.headerTitle')
     }),
     {
-      setTitle: () => title => {
-        return { title };
-      }
+      onLogout: () => ({
+        type: LOGOUT
+      })
     }
-  ),
-  lifecycle({
-    componentWillMount() {
-      emitter.on('header:update', this.props.setTitle);
-    }
-  })
+  )
 )(Header);
 
 export default EnhancedHeader;

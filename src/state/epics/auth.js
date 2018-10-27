@@ -50,7 +50,7 @@ function logout($action) {
       return {
         type: UI,
         payload: {
-          isAuthenticated: false
+          isReady: false
         }
       };
     })
