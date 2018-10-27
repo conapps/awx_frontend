@@ -1,7 +1,8 @@
 import compose from 'recompose/compose.js';
+import lifecycle from 'recompose/lifecycle';
 import { connect } from 'react-redux';
 import get from 'lodash/get.js';
-import { LOGIN, LOGOUT } from '../state/actions.js';
+import { LOGIN, LOGOUT, RUN } from '../state/actions.js';
 import App from './App.js';
 
 const EnhancedApp = compose(
@@ -9,9 +10,13 @@ const EnhancedApp = compose(
     state => ({
       loading: get(state, 'ui.loading.login', false),
       error: get(state, 'ui.errors.login', undefined),
-      isAuthenticated: get(state, 'ui.isAuthenticated', false)
+      isAuthenticated: get(state, 'ui.isAuthenticated', false),
+      isReady: get(state, 'ui.isReady', false)
     }),
     {
+      onRun: () => ({
+        type: RUN
+      }),
       onLogin: payload => ({
         type: LOGIN,
         payload
@@ -20,7 +25,12 @@ const EnhancedApp = compose(
         type: LOGOUT
       })
     }
-  )
+  ),
+  lifecycle({
+    componentWillMount() {
+      this.props.onRun();
+    }
+  })
 )(App);
 
 export default EnhancedApp;

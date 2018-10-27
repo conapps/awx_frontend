@@ -1,13 +1,13 @@
 import './App.css';
 import React from 'react';
-import { Pane } from 'evergreen-ui';
+import { Pane, Spinner } from 'evergreen-ui';
 import Header from './Header/EnhancedHeader.js';
 import EnhancedBody from './Body/EnhancedBody.js';
 import Login from './Auth/EnhancedLogin.js';
 
 class App extends React.Component {
   render() {
-    const { isAuthenticated, onLogin, loading, error } = this.props;
+    const { isAuthenticated, isReady, onLogin, loading, error } = this.props;
 
     if (isAuthenticated === false)
       return (
@@ -19,7 +19,11 @@ class App extends React.Component {
           justifyContent="center"
           background="tint2"
         >
-          <Login onSubmit={onLogin} loading={loading} error={error} />
+          {isReady === false ? (
+            <Spinner />
+          ) : (
+            <Login onSubmit={onLogin} loading={loading} error={error} />
+          )}
         </Pane>
       );
 

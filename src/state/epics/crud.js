@@ -8,7 +8,8 @@ import {
   //  POST_REQUEST,
   //  PUT_REQUEST,
   //  DELETE_REQUEST,
-  REFRESH_TOKENS
+  REFRESH_TOKENS,
+  LOGOUT
 } from '../actions.js';
 import { API_URL } from '../../constants.js';
 import auth from '../../modules/auth.js';
@@ -17,55 +18,56 @@ export default combineEpics(getRequest);
 
 function getRequest($action) {
   return $action.ofType(GET_REQUEST).pipe(
-    switchMap(
-      ({
-        payload: {
-          actionTypes: [request, success, failure] = [],
-          endpoint,
-          refresh,
-          schema,
-          meta
-        } = {}
-      }) =>
-        concat(
-          observableOf({
-            type: request,
-            payload: meta
+    switchMap(({ payload }) => {
+      const {
+        actionTypes: [request, success, failure] = [],
+        endpoint,
+        refresh,
+        schema,
+        meta
+      } = payload;
+      return concat(
+        observableOf({
+          type: request,
+          payload: meta
+        }),
+        ajax.getJSON(`${API_URL}${endpoint}`, headers()).pipe(
+          switchMap(({ items = [] }) => {
+            return observableOf({
+              type: success,
+              payload: normalize(items, schema)
+            });
           }),
-          ajax.getJSON(`${API_URL}${endpoint}`, headers()).pipe(
-            switchMap(({ items = [] }) => {
-              return observableOf({
-                type: success,
-                payload: normalize(items, schema)
-              });
-            }),
-            catchError(response => {
-              if (response.status === 401 && refresh === undefined) {
-                console.log('Unauthorized');
-                return observableOf({
-                  type: REFRESH_TOKENS,
-                  payload: {
-                    type: GET_REQUEST,
-                    payload: {
-                      actionTypes: [request, success, failure],
-                      endpoint,
-                      schema,
-                      refresh: true,
-                      meta
-                    }
-                  }
-                });
-              }
+          catchError(response => {
+            if (response.status === 401 && refresh === undefined) {
+              console.log('Unauthorized');
+              return tryRefreshingTokens$(payload);
+            }
 
-              return observableOf({
-                type: failure,
-                payload: response
-              });
-            })
-          )
+            return observableOf({
+              type: failure,
+              payload: response
+            });
+          })
         )
-    )
+      );
+    })
   );
+}
+/** Observables */
+function tryRefreshingTokens$(payload) {
+  return observableOf({
+    type: REFRESH_TOKENS,
+    payload: {
+      success: {
+        ...payload,
+        refresh: true
+      },
+      failure: {
+        type: LOGOUT
+      }
+    }
+  });
 }
 
 /** Functions */

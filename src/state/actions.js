@@ -17,6 +17,7 @@ export const POST_REQUEST = `${PREFIX}/POST_REQUEST`;
 export const PUT_REQUEST = `${PREFIX}/PUT_REQUEST`;
 export const DELETE_REQUEST = `${PREFIX}/DELETE_REQUEST`;
 /** Auth */
+export const RUN = `${PREFIX}/RUN`;
 export const REFRESH_TOKENS = `${PREFIX}/REFRESH_TOKENS`;
 export const LOGIN = `${PREFIX}/LOGIN`;
 export const LOGOUT = `${PREFIX}/LOGOUT`;

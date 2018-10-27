@@ -9,12 +9,39 @@ import {
   LOGIN,
   LOGOUT,
   LOADING,
-  ERROR
+  ERROR,
+  RUN
 } from '../actions.js';
 import { AUTH_URL } from '../../constants.js';
 import auth from '../../modules/auth.js';
 
-export default combineEpics(refreshTokens, login, logout);
+export default combineEpics(refreshTokens, login, logout, run);
+
+function run($action) {
+  return $action.ofType(RUN).pipe(
+    switchMap(() => {
+      return observableOf({
+        type: REFRESH_TOKENS,
+        payload: {
+          success: {
+            type: UI,
+            payload: {
+              isReady: true,
+              isAuthenticated: true
+            }
+          },
+          failure: {
+            type: UI,
+            payload: {
+              isReady: true,
+              isAuthenticated: false
+            }
+          }
+        }
+      });
+    })
+  );
+}
 
 function logout($action) {
   return $action.ofType(LOGOUT).pipe(
@@ -110,7 +137,7 @@ function login($action) {
 
 function refreshTokens($action) {
   return $action.ofType(REFRESH_TOKENS).pipe(
-    switchMap(({ payload: { type, payload } }) =>
+    switchMap(({ payload: { success, failure } }) =>
       ajax
         .post(
           `${AUTH_URL}/refresh/`,
@@ -125,14 +152,11 @@ function refreshTokens($action) {
             auth.accessToken = response.accessToken;
             auth.idToken = response.idToken;
             auth.refreshToken = response.refreshToken;
-            return observableOf({
-              type,
-              payload
-            });
+            return observableOf(success);
           }),
           catchError(() => {
             console.log('Tokens refresh error');
-            //auth.logout();
+            return observableOf(failure);
           })
         )
     )
