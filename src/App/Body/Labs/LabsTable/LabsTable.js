@@ -1,9 +1,10 @@
 import React from 'react';
 import { Table } from 'evergreen-ui';
+import LabsTableMenu from './LabsTableMenu/EnhancedLabsTableMenu.js';
 
 export default LabsTable;
 
-function LabsTable({ labs }) {
+function LabsTable({ labs, onDelete }) {
   return (
     <Table width="100%">
       <Table.Head>
@@ -13,6 +14,7 @@ function LabsTable({ labs }) {
         <Table.TextHeaderCell>Run Playbook</Table.TextHeaderCell>
         <Table.TextHeaderCell>End Playbook</Table.TextHeaderCell>
         <Table.TextHeaderCell>Diagrama</Table.TextHeaderCell>
+        <Table.TextHeaderCell textAlign="center" />
       </Table.Head>
       <Table.VirtualBody height="calc(100vh - 64px - 52px - 48px - 64px)">
         {labs.map(lab => (
@@ -22,7 +24,13 @@ function LabsTable({ labs }) {
             <Table.TextCell>{lab.data.endDate}</Table.TextCell>
             <Table.TextCell>{lab.data.runPlaybook}</Table.TextCell>
             <Table.TextCell>{lab.data.endPlaybook}</Table.TextCell>
-            <Table.TextCell>{lab.data.diagramURL}</Table.TextCell>
+            <Table.Cell
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <LabsTableMenu id={lab.id} />
+            </Table.Cell>
           </Table.Row>
         ))}
       </Table.VirtualBody>

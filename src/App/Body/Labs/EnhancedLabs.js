@@ -1,16 +1,19 @@
 import compose from 'recompose/compose.js';
+import { toaster } from 'evergreen-ui';
 import withHandlers from 'recompose/withHandlers.js';
 import withStateHandlers from 'recompose/withStateHandlers.js';
 import lifecycle from 'recompose/lifecycle.js';
 import withLoadingHandlers from '../../../common/handlers/withLoadingHandlers.js';
+import withLabsState from '../../../common/handlers/withLabsState.js';
 import labs from '../../../modules/labs.js';
+import emitter from '../../../modules/emitter.js';
 import Labs from './Labs.js';
 
 const EnhancedLabs = compose(
   withLoadingHandlers(),
+  withLabsState(),
   withStateHandlers(
     () => ({
-      labs: labs.items,
       isSideSheetShow: false
     }),
     {
@@ -19,18 +22,22 @@ const EnhancedLabs = compose(
       }),
       closeSideSheet: () => () => ({
         isSideSheetShow: false
-      }),
-      setLabsState: () => () => ({
-        labs: labs.items
       })
     }
   ),
   lifecycle({
-    async componentWillMount() {
-      this.props.setLoadingState(true);
-      await labs.index();
-      this.props.setLoadingState(false);
-      this.props.setLabsState();
+    componentDidMount() {
+      labs.index();
+      /** Subscribe to events */
+      emitter.on('labs:update', this.props.setLabsState);
+      emitter.on('labs:update:start', this.props.setLoadingState.bind(true));
+      emitter.on('labs:update:end', this.props.setLoadingState.bind(false));
+    },
+
+    componentWillUnmount() {
+      emitter.off('labs:update:start');
+      emitter.off('labs:update');
+      emitter.off('labs:update:end');
     }
   }),
   withHandlers({
@@ -44,6 +51,7 @@ const EnhancedLabs = compose(
       closeSideSheet();
       setLabsState();
       setLoadingState(false);
+      toaster.success('Laboratorio creado');
     }
   })
 )(Labs);

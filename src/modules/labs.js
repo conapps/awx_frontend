@@ -1,4 +1,5 @@
 import FetchCRUD from './FetchCRUD.js';
+import filter from 'lodash/filter.js';
 
 class Labs extends FetchCRUD {
   items = [];
@@ -10,14 +11,7 @@ class Labs extends FetchCRUD {
   }
 
   index = async () => {
-    let response = await this.fetchIndex();
-
-    if (response.ok === false) {
-      await this.refreshTokens();
-      response = await this.fetchIndex();
-    }
-
-    const data = await response.json();
+    const data = await this.fetchIndex();
 
     this.items = data.items;
     this.next = data.next;
@@ -25,16 +19,14 @@ class Labs extends FetchCRUD {
   };
 
   create = async lab => {
-    let response = await this.fetchCreate(lab);
+    const data = await this.fetchCreate(lab);
 
-    if (response.ok === false) {
-      await this.refreshTokens();
-      response = await this.fetchIndex();
-    }
+    this.items = [data, ...this.items];
+  };
 
-    const data = await response.json();
-
-    this.items.push(data);
+  delete = async id => {
+    this.items = filter(this.items, item => item.id !== id);
+    await this.fetchDelete(id);
   };
 }
 

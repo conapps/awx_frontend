@@ -7,7 +7,11 @@ function Header({ onLogout }) {
   return (
     <Pane display="flex" padding={16} background="tint2" borderRadius={3}>
       <Pane flex={3} alignItems="center" display="flex">
-        <Heading size={600}>{'Conalabs'}</Heading>
+        <Heading size={600}>
+          <a href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+            Conalabs
+          </a>
+        </Heading>
         &nbsp;
         <Heading size={600}>{'/'}</Heading>
         &nbsp;

@@ -1,0 +1,20 @@
+import compose from 'recompose/compose.js';
+import withStateHandlers from 'recompose/withStateHandlers.js';
+import labs from '../../modules/labs.js';
+
+export default withLabsState;
+
+function withLabsState() {
+  return compose(
+    withStateHandlers(
+      () => ({
+        labs: labs.items
+      }),
+      {
+        setLabsState: () => () => ({
+          labs: labs.items
+        })
+      }
+    )
+  );
+}
