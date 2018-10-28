@@ -6,7 +6,7 @@ import { normalize } from 'normalizr';
 import {
   GET_REQUEST,
   POST_REQUEST,
-  //  PUT_REQUEST,
+  PUT_REQUEST,
   DELETE_REQUEST,
   REFRESH_TOKENS,
   LOGOUT,
@@ -16,7 +16,7 @@ import {
 import { API_URL } from '../../constants.js';
 import auth from '../../modules/auth.js';
 
-export default combineEpics(getRequest, postRequest, deleteRequest);
+export default combineEpics(getRequest, postRequest, deleteRequest, putRequest);
 
 function postRequest($action) {
   return $action.ofType(POST_REQUEST).pipe(
@@ -43,6 +43,79 @@ function postRequest($action) {
           }
         }),
         ajax.post(`${API_URL}${endpoint}`, body, headers()).pipe(
+          switchMap(({ response }) => {
+            return concat(
+              observableOf({
+                type: success,
+                payload: normalize([response], schema)
+              }),
+              observableOf({
+                type: LOADING,
+                payload: {
+                  key: uiKey,
+                  value: false
+                }
+              })
+            );
+          }),
+          catchError(response => {
+            if (response.status === 401 && refresh === undefined) {
+              console.log('Unauthorized');
+              return tryRefreshingTokens$(payload);
+            }
+
+            return concat(
+              observableOf({
+                type: ERROR,
+                payload: {
+                  key: uiKey,
+                  value: response
+                }
+              }),
+              observableOf({
+                type: failure,
+                payload: response
+              }),
+              observableOf({
+                type: LOADING,
+                payload: {
+                  key: uiKey,
+                  value: false
+                }
+              })
+            );
+          })
+        )
+      );
+    })
+  );
+}
+
+function putRequest($action) {
+  return $action.ofType(PUT_REQUEST).pipe(
+    switchMap(({ payload }) => {
+      const {
+        actionTypes: [request, success, failure] = [],
+        endpoint,
+        refresh,
+        uiKey,
+        body,
+        schema,
+        meta
+      } = payload;
+      return concat(
+        observableOf({
+          type: request,
+          payload: meta
+        }),
+        observableOf({
+          type: LOADING,
+          payload: {
+            key: uiKey,
+            value: true
+          }
+        }),
+        ajax.put(`${API_URL}${endpoint}`, body, headers()).pipe(
           switchMap(({ response }) => {
             return concat(
               observableOf({

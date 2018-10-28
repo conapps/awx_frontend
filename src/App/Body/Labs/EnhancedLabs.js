@@ -1,19 +1,23 @@
 import compose from 'recompose/compose.js';
 import { connect } from 'react-redux';
 import get from 'lodash/get.js';
-import { toaster } from 'evergreen-ui';
+import { normalize } from 'normalizr';
 import withHandlers from 'recompose/withHandlers.js';
 import lifecycle from 'recompose/lifecycle.js';
 import {
   UI,
   GET_REQUEST,
   POST_REQUEST,
+  PUT_REQUEST,
   LABS_INDEX_SUCCESS,
   LABS_INDEX_REQUEST,
   LABS_INDEX_FAILURE,
   LABS_CREATE_SUCCESS,
   LABS_CREATE_REQUEST,
-  LABS_CREATE_FAILURE
+  LABS_CREATE_FAILURE,
+  LABS_UPDATE_SUCCESS,
+  LABS_UPDATE_REQUEST,
+  LABS_UPDATE_FAILURE
 } from '../../../state/actions.js';
 import { labs as schema } from '../../../state/schemas.js';
 import { getLabs } from '../../../state/reducers/labs.js';
@@ -54,6 +58,23 @@ const EnhancedLabs = compose(
           ]
         }
       }),
+      update: (lab, id) => ({
+        type: PUT_REQUEST,
+        payload: {
+          endpoint: `/labs/${id}/`,
+          body: lab,
+          uiKey: 'labsUpdate',
+          schema,
+          actionTypes: [
+            LABS_UPDATE_REQUEST,
+            LABS_UPDATE_SUCCESS,
+            LABS_UPDATE_FAILURE
+          ],
+          meta: {
+            ...normalize([{ id, data: lab }], schema)
+          }
+        }
+      }),
       openSideSheet: () => ({
         type: UI,
         payload: {
@@ -62,11 +83,12 @@ const EnhancedLabs = compose(
           }
         }
       }),
-      clodeSideSheet: () => ({
+      closeSideSheet: () => ({
         type: UI,
         payload: {
           labs: {
-            isSideSheetOpen: false
+            isSideSheetOpen: false,
+            editing: undefined
           }
         }
       })
@@ -78,10 +100,9 @@ const EnhancedLabs = compose(
     }
   }),
   withHandlers({
-    onSubmit: ({ create }) => async lab => {
-      // TODO
-      create(lab);
-      toaster.success('Laboratorio creado');
+    onSubmit: ({ create, update }) => (lab, id) => {
+      if (id === undefined) create(lab);
+      else update(lab, id);
     }
   })
 )(Labs);

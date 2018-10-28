@@ -42,7 +42,7 @@ function LabsTable({ labs }) {
             </Table.TextCell>
             <Table.TextCell>{lab.data.runPlaybook}</Table.TextCell>
             <Table.TextCell>{lab.data.endPlaybook}</Table.TextCell>
-            <Table.TextCell>{lab.data.imageURL}</Table.TextCell>
+            <Table.TextCell>{lab.data.diagramURL}</Table.TextCell>
             <Table.Cell
               display="flex"
               alignItems="center"

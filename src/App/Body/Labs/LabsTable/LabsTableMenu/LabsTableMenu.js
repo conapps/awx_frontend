@@ -3,13 +3,14 @@ import { Popover, Position, Menu, Button } from 'evergreen-ui';
 
 export default LabsTableMenu;
 
-function LabsTableMenu({ onDelete }) {
+function LabsTableMenu({ onDelete, onEdit }) {
   return (
     <Popover
       position={Position.BOTTOM_LEFT}
       content={
         <Menu>
           <Menu.Group>
+            <Menu.Item onSelect={onEdit}>Editar</Menu.Item>
             <Menu.Item onSelect={onDelete} intent="danger">
               Eliminar
             </Menu.Item>

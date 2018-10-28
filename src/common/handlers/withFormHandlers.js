@@ -5,17 +5,22 @@ import isFunction from 'lodash/isFunction.js';
 
 export default withFormHandlers;
 
-function withFormHandlers(form) {
+function withFormHandlers(initialForm) {
   return compose(
-    withStateHandlers(() => ({ form, formErrors: {} }), {
-      setForm: ({ form, formErrors }) => newForm => ({
-        form: {
-          ...form,
-          ...newForm
-        }
-      }),
-      setFormErrors: () => formErrors => ({ formErrors })
-    }),
+    withStateHandlers(
+      ({ form }) => {
+        return { form: { ...initialForm, ...form }, formErrors: {} };
+      },
+      {
+        setForm: ({ form, formErrors }) => newForm => ({
+          form: {
+            ...form,
+            ...newForm
+          }
+        }),
+        setFormErrors: () => formErrors => ({ formErrors })
+      }
+    ),
     withHandlers({
       formIsValid: ({ validate, setFormErrors, form }) => () => {
         if (!isFunction(validate)) return {};

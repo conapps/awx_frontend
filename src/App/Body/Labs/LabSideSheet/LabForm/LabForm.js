@@ -1,9 +1,9 @@
 import React from 'react';
-import { TextInputField, Button } from 'evergreen-ui';
+import { TextInputField, Button, Spinner } from 'evergreen-ui';
 
 export default LabForm;
 
-function LabForm({ handleTextChange, handleSubmit, form }) {
+function LabForm({ handleTextChange, handleSubmit, form, loading, id }) {
   return (
     <form onSubmit={handleSubmit}>
       <TextInputField
@@ -48,8 +48,24 @@ function LabForm({ handleTextChange, handleSubmit, form }) {
         onChange={handleTextChange('diagramURL')}
         value={form.diagramURL}
       />
-      <Button type="submit" appearance="primary" intent="success">
-        Aceptar
+      <Button
+        type="submit"
+        textAlign="center"
+        width="100%"
+        appearance="primary"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        disabled={loading}
+        intent={id === undefined ? 'success' : 'warning'}
+      >
+        {loading === true ? (
+          <Spinner size={16} />
+        ) : id === undefined ? (
+          'Crear'
+        ) : (
+          'Actualizar'
+        )}
       </Button>
     </form>
   );

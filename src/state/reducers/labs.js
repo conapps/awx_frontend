@@ -8,10 +8,7 @@ import {
 
 export default labs;
 
-function labs(
-  state = { ids: [], error: undefined, loading: false },
-  { type, payload }
-) {
+function labs(state = { ids: [], error: undefined }, { type, payload }) {
   switch (type) {
     case LABS_CREATE_SUCCESS:
     case LABS_INDEX_SUCCESS:
