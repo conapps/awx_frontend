@@ -7,6 +7,7 @@ class Labs extends React.Component {
   render() {
     const {
       labs,
+      index,
       openSideSheet,
       isSideSheetOpen,
       closeSideSheet,
@@ -15,7 +16,15 @@ class Labs extends React.Component {
     } = this.props;
     return (
       <Fragment>
-        <Pane display="flex" padding={16} width="100%">
+        <Pane
+          display="flex"
+          justifyContent="space-between"
+          padding={16}
+          width="100%"
+        >
+          <Button marginRight={16} onClick={index} isLoading={loading}>
+            Actualizar
+          </Button>
           <Button
             marginRight={16}
             intent="success"
