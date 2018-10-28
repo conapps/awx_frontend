@@ -2,15 +2,19 @@ import React, { Fragment } from 'react';
 import { Pane, Menu, Spinner } from 'evergreen-ui';
 import HorizontalTextInputField from './HorizontalTextInputField/HorizontalTextInputField.js';
 import LabSideSheet from '../LabSideSheet/LabSideSheet.js';
+import LabDeleteDialog from '../LabDeleteDialog/EnhancedLabDeleteDialog.js';
 
 export default Lab;
 
 function Lab({
-  lab,
-  isSideSheetOpen,
+  closeLabDeleteDialog,
   closeSideSheet,
+  isSideSheetOpen,
+  lab,
+  onDelete,
   onSubmit,
-  openSideSheet
+  openSideSheet,
+  showLabDeleteDialog
 }) {
   if (lab === undefined)
     return (
@@ -25,6 +29,7 @@ function Lab({
         close={closeSideSheet}
         onSubmit={onSubmit}
       />
+      <LabDeleteDialog onDelete={onDelete} close={closeLabDeleteDialog} />
       <Pane elevation={1} width="100%" display="flex">
         <Pane width="100%" padding={16} flex={4} alignItems="center">
           <HorizontalTextInputField
@@ -77,7 +82,12 @@ function Lab({
             </Menu.Group>
             <Menu.Divider />
             <Menu.Group>
-              <Menu.Item icon="ban-circle" color="danger" intent="danger">
+              <Menu.Item
+                icon="ban-circle"
+                color="danger"
+                intent="danger"
+                onClick={showLabDeleteDialog}
+              >
                 Eliminar
               </Menu.Item>
             </Menu.Group>

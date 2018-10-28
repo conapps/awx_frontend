@@ -85,7 +85,8 @@ const EnhancedLabs = compose(
         type: UI,
         payload: {
           labs: {
-            isSideSheetOpen: true
+            isSideSheetOpen: true,
+            editing: undefined
           }
         }
       }),

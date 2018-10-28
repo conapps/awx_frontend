@@ -7,7 +7,9 @@ function HorizontalTextInputField(props) {
   const { label, marginBottom, ...rest } = props;
   return (
     <Pane display="flex" alignItems="center" marginBottom={marginBottom}>
-      <Paragraph flex={1}>{label}</Paragraph>
+      <Paragraph flex={1} marginRight={8}>
+        {label}
+      </Paragraph>
       <TextInput {...rest} flex={3} />
     </Pane>
   );

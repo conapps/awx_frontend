@@ -7,14 +7,20 @@ import lifecycle from 'recompose/lifecycle.js';
 import withProps from 'recompose/withProps.js';
 import {
   UI,
+  MULTI,
+  GO,
   GET_REQUEST,
   PUT_REQUEST,
+  DELETE_REQUEST,
   LABS_SHOW_FAILURE,
   LABS_SHOW_REQUEST,
   LABS_SHOW_SUCCESS,
   LABS_UPDATE_FAILURE,
   LABS_UPDATE_REQUEST,
-  LABS_UPDATE_SUCCESS
+  LABS_UPDATE_SUCCESS,
+  LABS_DELETE_FAILURE,
+  LABS_DELETE_REQUEST,
+  LABS_DELETE_SUCCESS
 } from '../../../state/actions.js';
 import { labs as schema } from '../../../state/schemas.js';
 import Lab from './Lab.js';
@@ -80,13 +86,54 @@ const EnhancedLab = compose(
             isSideSheetOpen: false
           }
         }
+      }),
+      showLabDeleteDialog: () => ({
+        type: UI,
+        payload: {
+          labs: {
+            isLabDeleteDialogOpen: true
+          }
+        }
+      }),
+      closeLabDeleteDialog: () => ({
+        type: UI,
+        payload: {
+          labs: {
+            isLabDeleteDialogOpen: false
+          }
+        }
+      }),
+      onDelete: id => ({
+        type: MULTI,
+        payload: [
+          {
+            type: GO,
+            payload: '/'
+          },
+          {
+            type: DELETE_REQUEST,
+            payload: {
+              endpoint: `/labs/${id}/`,
+              uiKey: 'labsDelete',
+              meta: {
+                id
+              },
+              actionTypes: [
+                LABS_DELETE_REQUEST,
+                LABS_DELETE_SUCCESS,
+                LABS_DELETE_FAILURE
+              ]
+            }
+          }
+        ]
       })
     }
   ),
   withHandlers({
     onSubmit: ({ update, id }) => lab => {
       update(lab, id);
-    }
+    },
+    onDelete: ({ onDelete, id }) => () => onDelete(id)
   }),
   lifecycle({
     componentDidMount() {

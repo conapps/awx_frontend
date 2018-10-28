@@ -1,6 +1,6 @@
 import React from 'react';
 import { Popover, Position, Menu, Button } from 'evergreen-ui';
-import LabDeleteDialog from './LabDeleteDialog/EnhancedLabDeleteDialog.js';
+import LabDeleteDialog from '../../../LabDeleteDialog/EnhancedLabDeleteDialog.js';
 
 export default LabRowMenu;
 
