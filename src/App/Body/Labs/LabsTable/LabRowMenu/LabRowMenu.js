@@ -1,9 +1,9 @@
 import React from 'react';
 import { Popover, Position, Menu, Button } from 'evergreen-ui';
 
-export default LabsTableMenu;
+export default LabRowMenu;
 
-function LabsTableMenu({ onDelete, onEdit }) {
+function LabRowMenu({ onDelete, onEdit }) {
   return (
     <Popover
       position={Position.BOTTOM_LEFT}

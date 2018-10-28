@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table } from 'evergreen-ui';
 import { Link } from 'react-router-dom';
-import LabsTableMenu from './LabsTableMenu/EnhancedLabsTableMenu.js';
+import LabRowMenu from './LabRowMenu/EnhancedLabRowMenu.js';
 
 export default LabsTable;
 
@@ -51,7 +51,7 @@ function LabsTable({ labs }) {
               flexShrink={0}
               flexGrow={0}
             >
-              <LabsTableMenu id={lab.id} />
+              <LabRowMenu id={lab.id} />
             </Table.Cell>
           </Table.Row>
         ))}

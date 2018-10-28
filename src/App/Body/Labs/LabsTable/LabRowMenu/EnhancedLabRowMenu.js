@@ -8,9 +8,9 @@ import {
   LABS_DELETE_SUCCESS,
   UI
 } from '../../../../../state/actions.js';
-import LabsTableMenu from './LabsTableMenu.js';
+import LabRowMenu from './LabRowMenu.js';
 
-const EnhancedLabsTableMenu = compose(
+const EnhancedLabRowMenu = compose(
   connect(
     () => ({}),
     {
@@ -44,8 +44,8 @@ const EnhancedLabsTableMenu = compose(
     onEdit: ({ onEdit, id }) => () => onEdit(id),
     onDelete: ({ onDelete, id }) => () => onDelete(id)
   })
-)(LabsTableMenu);
+)(LabRowMenu);
 
-EnhancedLabsTableMenu.displayName = 'enhance(LabsTableMenu)';
+EnhancedLabRowMenu.displayName = 'enhance(LabRowMenu)';
 
-export default EnhancedLabsTableMenu;
+export default EnhancedLabRowMenu;
