@@ -1,19 +1,24 @@
 import React, { Fragment } from 'react';
-import { Pane, Menu, Spinner } from 'evergreen-ui';
+import { Heading, Pane, Menu, Spinner, Button } from 'evergreen-ui';
 import HorizontalTextInputField from './HorizontalTextInputField/HorizontalTextInputField.js';
 import LabSideSheet from '../LabSideSheet/LabSideSheet.js';
 import LabDeleteDialog from '../LabDeleteDialog/EnhancedLabDeleteDialog.js';
+import ParticipantsTable from './ParticipantsTable/EnhancedParticipantsTable.js';
 
 export default Lab;
 
 function Lab({
   closeLabDeleteDialog,
   closeSideSheet,
+  closeParticipantSideSheet,
   isSideSheetOpen,
+  index,
+  loading,
   lab,
   onDelete,
   onSubmit,
   openSideSheet,
+  openParticipantSideSheet,
   showLabDeleteDialog
 }) {
   if (lab === undefined)
@@ -94,13 +99,26 @@ function Lab({
           </Menu>
         </Pane>
       </Pane>
-      <Pane
-        display="flex"
-        justifyContent="space-between"
-        padding={16}
-        width="100%"
-      >
-        <pre>{JSON.stringify(lab, null, 2)}</pre>
+      <Pane display="flex" marginTop={16} marginBottom={16}>
+        <Pane flex={3} alignItems="center" display="flex">
+          <Heading>Participantes</Heading>
+        </Pane>
+        <Pane
+          flex={2}
+          display="flex"
+          alignItems="center"
+          justifyContent="flex-end"
+        >
+          <Button onClick={index} isLoading={loading} marginRight={16}>
+            Actualizar
+          </Button>
+          <Button intent="success" iconBefore="plus" onClick={openSideSheet}>
+            Nuevo Participante
+          </Button>
+        </Pane>
+      </Pane>
+      <Pane display="flex" justifyContent="space-between" width="100%">
+        <ParticipantsTable />
       </Pane>
     </Fragment>
   );
