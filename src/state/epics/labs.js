@@ -5,10 +5,27 @@ import {
   LABS_CREATE_SUCCESS,
   LABS_DELETE_SUCCESS,
   LABS_UPDATE_SUCCESS,
+  LABS_SHOW_SUCCESS,
   UI
 } from '../actions.js';
 
-export default combineEpics(create, destroy, update);
+export default combineEpics(create, destroy, update, show);
+
+function show($action) {
+  return $action.ofType(LABS_SHOW_SUCCESS).pipe(
+    map(({ payload }) => {
+      console.log(payload);
+      const id = payload.result[0];
+      const lab = payload.entities.labs[id];
+      return {
+        type: UI,
+        payload: {
+          title: lab.data.name
+        }
+      };
+    })
+  );
+}
 
 function destroy($action) {
   return $action.ofType(LABS_DELETE_SUCCESS).pipe(

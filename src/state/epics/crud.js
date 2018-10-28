@@ -187,8 +187,13 @@ function getRequest($action) {
             value: true
           }
         }),
-        ajax.getJSON(`${API_URL}${endpoint}`, headers()).pipe(
-          switchMap(({ items = [] }) => {
+        ajax.get(`${API_URL}${endpoint}`, headers()).pipe(
+          switchMap(({ response }) => {
+            let items =
+              response && Array.isArray(response.items)
+                ? response.items
+                : [response];
+
             return concat(
               observableOf({
                 type: success,

@@ -31,6 +31,12 @@ const EnhancedLabs = compose(
       isSideSheetOpen: get(state, 'ui.labs.isSideSheetOpen', false)
     }),
     {
+      updateHeading: () => ({
+        type: UI,
+        payload: {
+          title: 'Laboratorios'
+        }
+      }),
       index: () => ({
         type: GET_REQUEST,
         payload: {
@@ -97,6 +103,7 @@ const EnhancedLabs = compose(
   lifecycle({
     componentWillMount() {
       this.props.index();
+      this.props.updateHeading();
     }
   }),
   withHandlers({

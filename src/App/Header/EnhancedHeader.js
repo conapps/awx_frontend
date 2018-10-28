@@ -7,7 +7,7 @@ import Header from './Header.js';
 const EnhancedHeader = compose(
   connect(
     state => ({
-      title: get(state, 'ui.headerTitle')
+      title: get(state, 'ui.title')
     }),
     {
       onLogout: () => ({
