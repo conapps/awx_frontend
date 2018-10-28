@@ -21,12 +21,7 @@ class Labs extends React.Component {
           close={closeSideSheet}
           onSubmit={onSubmit}
         />
-        <Pane
-          display="flex"
-          justifyContent="space-between"
-          padding={16}
-          width="100%"
-        >
+        <Pane display="flex" justifyContent="space-between" width="100%">
           <Button onClick={index} isLoading={loading}>
             Actualizar
           </Button>
@@ -38,13 +33,15 @@ class Labs extends React.Component {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          padding={16}
+          marginTop={16}
           width="100%"
         >
-          {loading === true ? (
-            <Spinner />
-          ) : labs.length === 0 ? (
-            <Paragraph>No se han encontrado laboratorios.</Paragraph>
+          {labs.length === 0 ? (
+            loading === true ? (
+              <Spinner />
+            ) : (
+              <Paragraph>No se han encontrado laboratorios.</Paragraph>
+            )
           ) : (
             <LabsTable labs={labs} />
           )}
