@@ -5,8 +5,7 @@ import {
   LABS_CREATE_SUCCESS,
   LABS_DELETE_SUCCESS,
   LABS_UPDATE_SUCCESS,
-  UI,
-  NOOP
+  UI
 } from '../actions.js';
 
 export default combineEpics(create, destroy, update);
@@ -16,7 +15,12 @@ function destroy($action) {
     map(() => {
       toaster.success('Laboratorio eliminado');
       return {
-        type: NOOP
+        type: UI,
+        payload: {
+          labs: {
+            isLabDeleteDialogOpen: false
+          }
+        }
       };
     })
   );

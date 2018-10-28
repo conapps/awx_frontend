@@ -14,6 +14,22 @@ const EnhancedLabRowMenu = compose(
   connect(
     () => ({}),
     {
+      showLabDeleteDialog: () => ({
+        type: UI,
+        payload: {
+          labs: {
+            isLabDeleteDialogOpen: true
+          }
+        }
+      }),
+      closeLabDeleteDialog: () => ({
+        type: UI,
+        payload: {
+          labs: {
+            isLabDeleteDialogOpen: false
+          }
+        }
+      }),
       onEdit: id => ({
         type: UI,
         payload: {
