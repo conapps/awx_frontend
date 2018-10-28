@@ -1,6 +1,6 @@
 import { ajax } from 'rxjs/ajax';
 import { of as observableOf, concat } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
+import { switchMap, mergeMap, catchError } from 'rxjs/operators';
 import { combineEpics } from 'redux-observable';
 import { normalize } from 'normalizr';
 import {
@@ -20,7 +20,7 @@ export default combineEpics(getRequest, postRequest, deleteRequest, putRequest);
 
 function postRequest($action) {
   return $action.ofType(POST_REQUEST).pipe(
-    switchMap(({ payload }) => {
+    mergeMap(({ payload }) => {
       const {
         actionTypes: [request, success, failure] = [],
         endpoint,
@@ -93,7 +93,7 @@ function postRequest($action) {
 
 function putRequest($action) {
   return $action.ofType(PUT_REQUEST).pipe(
-    switchMap(({ payload }) => {
+    mergeMap(({ payload }) => {
       const {
         actionTypes: [request, success, failure] = [],
         endpoint,
@@ -166,7 +166,7 @@ function putRequest($action) {
 
 function getRequest($action) {
   return $action.ofType(GET_REQUEST).pipe(
-    switchMap(({ payload }) => {
+    mergeMap(({ payload }) => {
       const {
         actionTypes: [request, success, failure] = [],
         endpoint,
@@ -243,7 +243,7 @@ function getRequest($action) {
 
 function deleteRequest($action) {
   return $action.ofType(DELETE_REQUEST).pipe(
-    switchMap(({ payload }) => {
+    mergeMap(({ payload }) => {
       const {
         actionTypes: [request, success, failure] = [],
         endpoint,

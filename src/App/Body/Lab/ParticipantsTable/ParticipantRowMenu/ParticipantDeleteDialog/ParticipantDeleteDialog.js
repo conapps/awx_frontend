@@ -11,7 +11,7 @@ function ParticipantDeleteDialog({ isShown, close, onDelete }) {
       intent="danger"
       onCloseComplete={close}
       onConfirm={onDelete}
-      confirmParticipantel="Si, quiero eliminar al Participante"
+      confirmLabel="Si, quiero eliminar al Participante"
     >
       <Heading>¿Esta seguro que desea eliminar a este Participante?</Heading>
     </Dialog>

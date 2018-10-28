@@ -5,8 +5,8 @@ import { getParticipants } from '../../../../state/reducers/participants.js';
 
 const EnhancedParticipantsTable = compose(
   connect(
-    () => ({
-      participants: getParticipants()
+    state => ({
+      participants: getParticipants(state)
     }),
     {}
   )

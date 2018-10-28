@@ -14,8 +14,8 @@ function Lab({
   closeParticipantSideSheet,
   isSideSheetOpen,
   isParticipantSideSheetOpen,
-  index,
-  loading,
+  indexParticipants,
+  participantsLoading,
   lab,
   onDelete,
   onSubmit,
@@ -118,7 +118,11 @@ function Lab({
           alignItems="center"
           justifyContent="flex-end"
         >
-          <Button onClick={index} isLoading={loading} marginRight={16}>
+          <Button
+            onClick={indexParticipants}
+            isLoading={participantsLoading}
+            marginRight={16}
+          >
             Actualizar
           </Button>
           <Button

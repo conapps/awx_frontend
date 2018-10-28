@@ -23,7 +23,7 @@ function ParticipantsTable({ participants }) {
           ...
         </Table.TextHeaderCell>
       </Table.Head>
-      <Table.VirtualBody height="calc(100vh - 324px - 16px)">
+      <Table.VirtualBody height="calc(100vh - 324px - 32px)">
         {participants.map(participant => (
           <Table.Row key={participant.id} paddingRight={15}>
             <Table.TextCell>{participant.data.name}</Table.TextCell>

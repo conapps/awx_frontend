@@ -22,6 +22,9 @@ import {
   LABS_DELETE_FAILURE,
   LABS_DELETE_REQUEST,
   LABS_DELETE_SUCCESS,
+  PARTICIPANTS_INDEX_FAILURE,
+  PARTICIPANTS_INDEX_REQUEST,
+  PARTICIPANTS_INDEX_SUCCESS,
   PARTICIPANTS_CREATE_FAILURE,
   PARTICIPANTS_CREATE_REQUEST,
   PARTICIPANTS_CREATE_SUCCESS,
@@ -44,12 +47,14 @@ const EnhancedLab = compose(
     (state, { id }) => ({
       lab: get(state, `entities.labs.${id}`, undefined),
       labLoading: get(state, 'ui.loading.labsUpdate', false),
+      participantsLoading: get(state, 'ui.loading.participantsIndex', false),
       isSideSheetOpen: get(state, 'ui.labs.isSideSheetOpen', false),
       isParticipantSideSheetOpen: get(
         state,
         'ui.participants.isSideSheetOpen',
         false
-      )
+      ),
+      participantId: get(state, `ui.participants.editing`, undefined)
     }),
     {
       editUI: id => ({
@@ -87,13 +92,26 @@ const EnhancedLab = compose(
           }
         }
       }),
+      indexParticipants: () => ({
+        type: GET_REQUEST,
+        payload: {
+          endpoint: '/participants/',
+          uiKey: 'participantsIndex',
+          schema: participantsSchema,
+          actionTypes: [
+            PARTICIPANTS_INDEX_REQUEST,
+            PARTICIPANTS_INDEX_SUCCESS,
+            PARTICIPANTS_INDEX_FAILURE
+          ]
+        }
+      }),
       createParticipant: participants => ({
         type: POST_REQUEST,
         payload: {
           endpoint: '/participants/',
           body: participants,
           uiKey: 'participantsCreate',
-          schema,
+          schema: participantsSchema,
           actionTypes: [
             PARTICIPANTS_CREATE_REQUEST,
             PARTICIPANTS_CREATE_SUCCESS,
@@ -107,7 +125,7 @@ const EnhancedLab = compose(
           endpoint: `/participants/${id}/`,
           body: lab,
           uiKey: 'participantsUpdate',
-          schema,
+          schema: participantsSchema,
           actionTypes: [
             PARTICIPANTS_UPDATE_REQUEST,
             PARTICIPANTS_UPDATE_SUCCESS,
@@ -146,7 +164,8 @@ const EnhancedLab = compose(
         type: UI,
         payload: {
           participants: {
-            isSideSheetOpen: false
+            isSideSheetOpen: false,
+            editing: false
           }
         }
       }),
@@ -227,12 +246,16 @@ const EnhancedLab = compose(
     onSubmit: ({ update, id }) => lab => {
       update(lab, id);
     },
-    onParticipantSubmit: ({ createParticipant, updateParticipant }) => (
+    onParticipantSubmit: ({ createParticipant, updateParticipant, id }) => (
       participant,
-      id
+      participantId
     ) => {
-      if (id === undefined) createParticipant(participant);
-      else updateParticipant(participant, id);
+      if (participantId === undefined)
+        createParticipant({
+          ...participant,
+          labId: id
+        });
+      else updateParticipant(participant, participantId);
     },
     onDelete: ({ onDelete, id }) => () => onDelete(id),
     onParticipantDelete: ({ onParticipantDelete }) => id =>
@@ -242,6 +265,7 @@ const EnhancedLab = compose(
     componentDidMount() {
       this.props.show(this.props.id);
       this.props.editUI(this.props.id);
+      this.props.indexParticipants();
     }
   })
 )(Lab);
