@@ -14,13 +14,12 @@ export default combineEpics(create, destroy, update, show);
 function show($action) {
   return $action.ofType(LABS_SHOW_SUCCESS).pipe(
     map(({ payload }) => {
-      console.log(payload);
       const id = payload.result[0];
       const lab = payload.entities.labs[id];
       return {
         type: UI,
         payload: {
-          title: lab.data.name
+          title: `Laboratorios / ${lab.data.name}`
         }
       };
     })

@@ -16,7 +16,14 @@ function Header({ onLogout, title }) {
         &nbsp;
         <Heading size={600}>{'/'}</Heading>
         &nbsp;
-        <Heading size={600}>{title}</Heading>
+        <Heading
+          size={600}
+          textOverflow="ellipsis"
+          whiteSpace="nowrap"
+          overflow="hidden"
+        >
+          {title}
+        </Heading>
       </Pane>
       <Pane
         flex={2}
