@@ -1,10 +1,17 @@
 import React, { Fragment } from 'react';
 import { Pane, Menu, Spinner } from 'evergreen-ui';
 import HorizontalTextInputField from './HorizontalTextInputField/HorizontalTextInputField.js';
+import LabSideSheet from '../LabSideSheet/LabSideSheet.js';
 
 export default Lab;
 
-function Lab({ lab }) {
+function Lab({
+  lab,
+  isSideSheetOpen,
+  closeSideSheet,
+  onSubmit,
+  openSideSheet
+}) {
   if (lab === undefined)
     return (
       <Pane width="100%" display="flex" justifyContent="center">
@@ -13,6 +20,11 @@ function Lab({ lab }) {
     );
   return (
     <Fragment>
+      <LabSideSheet
+        isShown={isSideSheetOpen}
+        close={closeSideSheet}
+        onSubmit={onSubmit}
+      />
       <Pane elevation={1} width="100%" display="flex">
         <Pane width="100%" padding={16} flex={4} alignItems="center">
           <HorizontalTextInputField
@@ -59,7 +71,9 @@ function Lab({ lab }) {
         <Pane padding={16} flex={1}>
           <Menu>
             <Menu.Group>
-              <Menu.Item icon="edit">Editar</Menu.Item>
+              <Menu.Item icon="edit" onClick={openSideSheet}>
+                Editar
+              </Menu.Item>
             </Menu.Group>
             <Menu.Divider />
             <Menu.Group>

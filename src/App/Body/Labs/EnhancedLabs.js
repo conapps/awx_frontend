@@ -100,16 +100,16 @@ const EnhancedLabs = compose(
       })
     }
   ),
-  lifecycle({
-    componentWillMount() {
-      this.props.index();
-      this.props.updateHeading();
-    }
-  }),
   withHandlers({
     onSubmit: ({ create, update }) => (lab, id) => {
       if (id === undefined) create(lab);
       else update(lab, id);
+    }
+  }),
+  lifecycle({
+    componentWillMount() {
+      this.props.index();
+      this.props.updateHeading();
     }
   })
 )(Labs);

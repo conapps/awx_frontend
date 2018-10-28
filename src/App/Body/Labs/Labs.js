@@ -16,6 +16,11 @@ class Labs extends React.Component {
     } = this.props;
     return (
       <Fragment>
+        <LabSideSheet
+          isShown={isSideSheetOpen}
+          close={closeSideSheet}
+          onSubmit={onSubmit}
+        />
         <Pane
           display="flex"
           justifyContent="space-between"
@@ -28,11 +33,6 @@ class Labs extends React.Component {
           <Button intent="success" iconBefore="plus" onClick={openSideSheet}>
             Nuevo Laboratorio
           </Button>
-          <LabSideSheet
-            isShown={isSideSheetOpen}
-            close={closeSideSheet}
-            onSubmit={onSubmit}
-          />
         </Pane>
         <Pane
           display="flex"
