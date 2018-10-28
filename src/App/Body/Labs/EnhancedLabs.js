@@ -23,7 +23,7 @@ const EnhancedLabs = compose(
   connect(
     state => ({
       labs: getLabs(state),
-      loading: get(state, 'ui.labs.indexLoading', false),
+      loading: get(state, 'ui.loading.labsIndex', false),
       isSideSheetOpen: get(state, 'ui.labs.isSideSheetOpen', false)
     }),
     {
@@ -31,6 +31,7 @@ const EnhancedLabs = compose(
         type: GET_REQUEST,
         payload: {
           endpoint: '/labs/',
+          uiKey: 'labsIndex',
           schema,
           actionTypes: [
             LABS_INDEX_REQUEST,
@@ -44,6 +45,7 @@ const EnhancedLabs = compose(
         payload: {
           endpoint: '/labs/',
           body: lab,
+          uiKey: 'labsCreate',
           schema,
           actionTypes: [
             LABS_CREATE_REQUEST,

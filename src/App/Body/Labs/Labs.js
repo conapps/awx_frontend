@@ -8,7 +8,7 @@ class Labs extends React.Component {
     const {
       labs,
       openSideSheet,
-      isSideSheetShow,
+      isSideSheetOpen,
       closeSideSheet,
       onSubmit,
       loading
@@ -25,7 +25,7 @@ class Labs extends React.Component {
             Nuevo Laboratorio
           </Button>
           <LabSideSheet
-            isShown={isSideSheetShow}
+            isShown={isSideSheetOpen}
             close={closeSideSheet}
             onSubmit={onSubmit}
           />

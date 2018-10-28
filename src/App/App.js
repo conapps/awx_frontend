@@ -2,7 +2,7 @@ import './App.css';
 import React from 'react';
 import { Pane, Spinner } from 'evergreen-ui';
 import Header from './Header/EnhancedHeader.js';
-import EnhancedBody from './Body/EnhancedBody.js';
+import EnhancedBody from './Body/Body.js';
 import Login from './Auth/EnhancedLogin.js';
 
 class App extends React.Component {

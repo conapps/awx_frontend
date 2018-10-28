@@ -5,24 +5,28 @@ import { combineEpics } from 'redux-observable';
 import { normalize } from 'normalizr';
 import {
   GET_REQUEST,
-  //  POST_REQUEST,
+  POST_REQUEST,
   //  PUT_REQUEST,
   //  DELETE_REQUEST,
   REFRESH_TOKENS,
-  LOGOUT
+  LOGOUT,
+  LOADING,
+  ERROR
 } from '../actions.js';
 import { API_URL } from '../../constants.js';
 import auth from '../../modules/auth.js';
 
-export default combineEpics(getRequest);
+export default combineEpics(getRequest, postRequest);
 
-function getRequest($action) {
-  return $action.ofType(GET_REQUEST).pipe(
+function postRequest($action) {
+  return $action.ofType(POST_REQUEST).pipe(
     switchMap(({ payload }) => {
       const {
         actionTypes: [request, success, failure] = [],
         endpoint,
         refresh,
+        uiKey,
+        body,
         schema,
         meta
       } = payload;
@@ -31,12 +35,28 @@ function getRequest($action) {
           type: request,
           payload: meta
         }),
-        ajax.getJSON(`${API_URL}${endpoint}`, headers()).pipe(
-          switchMap(({ items = [] }) => {
-            return observableOf({
-              type: success,
-              payload: normalize(items, schema)
-            });
+        observableOf({
+          type: LOADING,
+          payload: {
+            key: uiKey,
+            value: true
+          }
+        }),
+        ajax.post(`${API_URL}${endpoint}`, body, headers()).pipe(
+          switchMap(({ response }) => {
+            return concat(
+              observableOf({
+                type: success,
+                payload: normalize([response], schema)
+              }),
+              observableOf({
+                type: LOADING,
+                payload: {
+                  key: uiKey,
+                  value: false
+                }
+              })
+            );
           }),
           catchError(response => {
             if (response.status === 401 && refresh === undefined) {
@@ -44,10 +64,98 @@ function getRequest($action) {
               return tryRefreshingTokens$(payload);
             }
 
-            return observableOf({
-              type: failure,
-              payload: response
-            });
+            return concat(
+              observableOf({
+                type: ERROR,
+                payload: {
+                  key: uiKey,
+                  value: response
+                }
+              }),
+              observableOf({
+                type: failure,
+                payload: response
+              }),
+              observableOf({
+                type: LOADING,
+                payload: {
+                  key: uiKey,
+                  value: false
+                }
+              })
+            );
+          })
+        )
+      );
+    })
+  );
+}
+
+function getRequest($action) {
+  return $action.ofType(GET_REQUEST).pipe(
+    switchMap(({ payload }) => {
+      const {
+        actionTypes: [request, success, failure] = [],
+        endpoint,
+        refresh,
+        uiKey,
+        schema,
+        meta
+      } = payload;
+      return concat(
+        observableOf({
+          type: request,
+          payload: meta
+        }),
+        observableOf({
+          type: LOADING,
+          payload: {
+            key: uiKey,
+            value: true
+          }
+        }),
+        ajax.getJSON(`${API_URL}${endpoint}`, headers()).pipe(
+          switchMap(({ items = [] }) => {
+            return concat(
+              observableOf({
+                type: success,
+                payload: normalize(items, schema)
+              }),
+              observableOf({
+                type: LOADING,
+                payload: {
+                  key: uiKey,
+                  value: false
+                }
+              })
+            );
+          }),
+          catchError(response => {
+            if (response.status === 401 && refresh === undefined) {
+              console.log('Unauthorized');
+              return tryRefreshingTokens$(payload);
+            }
+
+            return concat(
+              observableOf({
+                type: ERROR,
+                payload: {
+                  key: uiKey,
+                  value: response
+                }
+              }),
+              observableOf({
+                type: failure,
+                payload: response
+              }),
+              observableOf({
+                type: LOADING,
+                payload: {
+                  key: uiKey,
+                  value: false
+                }
+              })
+            );
           })
         )
       );
