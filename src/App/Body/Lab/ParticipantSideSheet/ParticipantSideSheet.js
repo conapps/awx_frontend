@@ -1,17 +1,17 @@
 import React from 'react';
 import { SideSheet, Pane, Heading } from 'evergreen-ui';
-import LabForm from './LabForm/EnhancedLabForm.js';
+import ParticipantForm from './ParticipantForm/EnhancedParticipantForm.js';
 
-export default LabSidebar;
+export default ParticipantSideSheet;
 
-function LabSidebar({ isShown, close, onSubmit }) {
+function ParticipantSideSheet({ isShown, close, onSubmit }) {
   return (
     <SideSheet isShown={isShown} onCloseComplete={close}>
       <Pane padding={16}>
         <Heading size={600} marginBottom={16}>
-          Laboratorio
+          Participante
         </Heading>
-        <LabForm onSubmit={onSubmit} />
+        <ParticipantForm onSubmit={onSubmit} />
       </Pane>
     </SideSheet>
   );

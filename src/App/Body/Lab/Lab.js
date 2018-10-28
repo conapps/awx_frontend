@@ -4,6 +4,7 @@ import HorizontalTextInputField from './HorizontalTextInputField/HorizontalTextI
 import LabSideSheet from '../LabSideSheet/LabSideSheet.js';
 import LabDeleteDialog from '../LabDeleteDialog/EnhancedLabDeleteDialog.js';
 import ParticipantsTable from './ParticipantsTable/EnhancedParticipantsTable.js';
+import ParticipantSideSheet from './ParticipantSideSheet/ParticipantSideSheet.js';
 
 export default Lab;
 
@@ -12,11 +13,13 @@ function Lab({
   closeSideSheet,
   closeParticipantSideSheet,
   isSideSheetOpen,
+  isParticipantSideSheetOpen,
   index,
   loading,
   lab,
   onDelete,
   onSubmit,
+  onParticipantSubmit,
   openSideSheet,
   openParticipantSideSheet,
   showLabDeleteDialog
@@ -27,12 +30,18 @@ function Lab({
         <Spinner />
       </Pane>
     );
+
   return (
     <Fragment>
       <LabSideSheet
         isShown={isSideSheetOpen}
         close={closeSideSheet}
         onSubmit={onSubmit}
+      />
+      <ParticipantSideSheet
+        isShown={isParticipantSideSheetOpen}
+        close={closeParticipantSideSheet}
+        onSubmit={onParticipantSubmit}
       />
       <LabDeleteDialog onDelete={onDelete} close={closeLabDeleteDialog} />
       <Pane elevation={1} width="100%" display="flex">
@@ -112,7 +121,11 @@ function Lab({
           <Button onClick={index} isLoading={loading} marginRight={16}>
             Actualizar
           </Button>
-          <Button intent="success" iconBefore="plus" onClick={openSideSheet}>
+          <Button
+            intent="success"
+            iconBefore="plus"
+            onClick={openParticipantSideSheet}
+          >
             Nuevo Participante
           </Button>
         </Pane>

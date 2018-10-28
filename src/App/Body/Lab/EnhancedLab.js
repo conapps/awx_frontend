@@ -11,6 +11,7 @@ import {
   GO,
   GET_REQUEST,
   PUT_REQUEST,
+  POST_REQUEST,
   DELETE_REQUEST,
   LABS_SHOW_FAILURE,
   LABS_SHOW_REQUEST,
@@ -20,9 +21,19 @@ import {
   LABS_UPDATE_SUCCESS,
   LABS_DELETE_FAILURE,
   LABS_DELETE_REQUEST,
-  LABS_DELETE_SUCCESS
+  LABS_DELETE_SUCCESS,
+  PARTICIPANTS_CREATE_FAILURE,
+  PARTICIPANTS_CREATE_REQUEST,
+  PARTICIPANTS_CREATE_SUCCESS,
+  PARTICIPANTS_UPDATE_FAILURE,
+  PARTICIPANTS_UPDATE_REQUEST,
+  PARTICIPANTS_UPDATE_SUCCESS,
+  PARTICIPANTS_DELETE_FAILURE,
+  PARTICIPANTS_DELETE_REQUEST,
+  PARTICIPANTS_DELETE_SUCCESS
 } from '../../../state/actions.js';
 import { labs as schema } from '../../../state/schemas.js';
+import { participants as participantsSchema } from '../../../state/schemas.js';
 import Lab from './Lab.js';
 
 const EnhancedLab = compose(
@@ -33,7 +44,12 @@ const EnhancedLab = compose(
     (state, { id }) => ({
       lab: get(state, `entities.labs.${id}`, undefined),
       labLoading: get(state, 'ui.loading.labsUpdate', false),
-      isSideSheetOpen: get(state, 'ui.labs.isSideSheetOpen', false)
+      isSideSheetOpen: get(state, 'ui.labs.isSideSheetOpen', false),
+      isParticipantSideSheetOpen: get(
+        state,
+        'ui.participants.isSideSheetOpen',
+        false
+      )
     }),
     {
       editUI: id => ({
@@ -71,10 +87,49 @@ const EnhancedLab = compose(
           }
         }
       }),
+      createParticipant: participants => ({
+        type: POST_REQUEST,
+        payload: {
+          endpoint: '/participants/',
+          body: participants,
+          uiKey: 'participantsCreate',
+          schema,
+          actionTypes: [
+            PARTICIPANTS_CREATE_REQUEST,
+            PARTICIPANTS_CREATE_SUCCESS,
+            PARTICIPANTS_CREATE_FAILURE
+          ]
+        }
+      }),
+      updateParticipant: (lab, id) => ({
+        type: PUT_REQUEST,
+        payload: {
+          endpoint: `/participants/${id}/`,
+          body: lab,
+          uiKey: 'participantsUpdate',
+          schema,
+          actionTypes: [
+            PARTICIPANTS_UPDATE_REQUEST,
+            PARTICIPANTS_UPDATE_SUCCESS,
+            PARTICIPANTS_UPDATE_FAILURE
+          ],
+          meta: {
+            ...normalize([{ id, data: lab }], participantsSchema)
+          }
+        }
+      }),
       openSideSheet: () => ({
         type: UI,
         payload: {
           labs: {
+            isSideSheetOpen: true
+          }
+        }
+      }),
+      openParticipantSideSheet: () => ({
+        type: UI,
+        payload: {
+          participants: {
             isSideSheetOpen: true
           }
         }
@@ -87,6 +142,14 @@ const EnhancedLab = compose(
           }
         }
       }),
+      closeParticipantSideSheet: () => ({
+        type: UI,
+        payload: {
+          participants: {
+            isSideSheetOpen: false
+          }
+        }
+      }),
       showLabDeleteDialog: () => ({
         type: UI,
         payload: {
@@ -95,10 +158,26 @@ const EnhancedLab = compose(
           }
         }
       }),
+      showParticipantLabDeleteDialog: () => ({
+        type: UI,
+        payload: {
+          participants: {
+            isLabDeleteDialogOpen: true
+          }
+        }
+      }),
       closeLabDeleteDialog: () => ({
         type: UI,
         payload: {
           labs: {
+            isLabDeleteDialogOpen: false
+          }
+        }
+      }),
+      closeParticipantsLabDeleteDialog: () => ({
+        type: UI,
+        payload: {
+          participants: {
             isLabDeleteDialogOpen: false
           }
         }
@@ -126,6 +205,21 @@ const EnhancedLab = compose(
             }
           }
         ]
+      }),
+      onParticipantDelete: id => ({
+        type: DELETE_REQUEST,
+        payload: {
+          endpoint: `/participants/${id}/`,
+          uiKey: 'participantsDelete',
+          meta: {
+            id
+          },
+          actionTypes: [
+            PARTICIPANTS_DELETE_REQUEST,
+            PARTICIPANTS_DELETE_SUCCESS,
+            PARTICIPANTS_DELETE_FAILURE
+          ]
+        }
       })
     }
   ),
@@ -133,7 +227,16 @@ const EnhancedLab = compose(
     onSubmit: ({ update, id }) => lab => {
       update(lab, id);
     },
-    onDelete: ({ onDelete, id }) => () => onDelete(id)
+    onParticipantSubmit: ({ createParticipant, updateParticipant }) => (
+      participant,
+      id
+    ) => {
+      if (id === undefined) createParticipant(participant);
+      else updateParticipant(participant, id);
+    },
+    onDelete: ({ onDelete, id }) => () => onDelete(id),
+    onParticipantDelete: ({ onParticipantDelete }) => id =>
+      onParticipantDelete(id)
   }),
   lifecycle({
     componentDidMount() {
