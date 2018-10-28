@@ -17,6 +17,7 @@ function LabRowMenu({
         <Menu>
           <Menu.Group>
             <Menu.Item onSelect={onEdit}>Editar</Menu.Item>
+            <Menu.Divider />
             <Menu.Item onSelect={showLabDeleteDialog} intent="danger">
               Eliminar
               <LabDeleteDialog
