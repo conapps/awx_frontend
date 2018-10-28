@@ -1,6 +1,10 @@
 import union from 'lodash/union.js';
 import get from 'lodash/get.js';
-import { LABS_CREATE_SUCCESS, LABS_INDEX_SUCCESS } from '../actions.js';
+import {
+  LABS_CREATE_SUCCESS,
+  LABS_INDEX_SUCCESS,
+  LABS_DELETE_REQUEST
+} from '../actions.js';
 
 export default labs;
 
@@ -14,6 +18,11 @@ function labs(
       return {
         ...state,
         ids: union(state.ids, payload.result)
+      };
+    case LABS_DELETE_REQUEST:
+      return {
+        ...state,
+        ids: state.ids.filter(id => id !== payload.id)
       };
     default:
       return state;

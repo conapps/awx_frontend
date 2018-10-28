@@ -1,19 +1,37 @@
 import compose from 'recompose/compose.js';
 import withHandlers from 'recompose/withHandlers.js';
-import { toaster } from 'evergreen-ui';
-import labs from '../../../../../modules/labs.js';
+import { connect } from 'react-redux';
+import {
+  DELETE_REQUEST,
+  LABS_DELETE_FAILURE,
+  LABS_DELETE_REQUEST,
+  LABS_DELETE_SUCCESS
+} from '../../../../../state/actions.js';
 import LabsTableMenu from './LabsTableMenu.js';
 
 const EnhancedLabsTableMenu = compose(
-  withHandlers({
-    onDelete: ({ id }) => async () => {
-      try {
-        await labs.delete(id);
-        toaster.success('Laboratorio eliminado');
-      } catch (err) {
-        toaster.danger(err.message);
-      }
+  connect(
+    () => ({}),
+    {
+      onDelete: id => ({
+        type: DELETE_REQUEST,
+        payload: {
+          endpoint: `/labs/${id}/`,
+          uiKey: 'labsDelete',
+          meta: {
+            id
+          },
+          actionTypes: [
+            LABS_DELETE_REQUEST,
+            LABS_DELETE_SUCCESS,
+            LABS_DELETE_FAILURE
+          ]
+        }
+      })
     }
+  ),
+  withHandlers({
+    onDelete: ({ onDelete, id }) => () => onDelete(id)
   })
 )(LabsTableMenu);
 

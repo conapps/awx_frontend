@@ -7,7 +7,7 @@ import {
   GET_REQUEST,
   POST_REQUEST,
   //  PUT_REQUEST,
-  //  DELETE_REQUEST,
+  DELETE_REQUEST,
   REFRESH_TOKENS,
   LOGOUT,
   LOADING,
@@ -16,7 +16,7 @@ import {
 import { API_URL } from '../../constants.js';
 import auth from '../../modules/auth.js';
 
-export default combineEpics(getRequest, postRequest);
+export default combineEpics(getRequest, postRequest, deleteRequest);
 
 function postRequest($action) {
   return $action.ofType(POST_REQUEST).pipe(
@@ -120,6 +120,76 @@ function getRequest($action) {
               observableOf({
                 type: success,
                 payload: normalize(items, schema)
+              }),
+              observableOf({
+                type: LOADING,
+                payload: {
+                  key: uiKey,
+                  value: false
+                }
+              })
+            );
+          }),
+          catchError(response => {
+            if (response.status === 401 && refresh === undefined) {
+              console.log('Unauthorized');
+              return tryRefreshingTokens$(payload);
+            }
+
+            return concat(
+              observableOf({
+                type: ERROR,
+                payload: {
+                  key: uiKey,
+                  value: response
+                }
+              }),
+              observableOf({
+                type: failure,
+                payload: response
+              }),
+              observableOf({
+                type: LOADING,
+                payload: {
+                  key: uiKey,
+                  value: false
+                }
+              })
+            );
+          })
+        )
+      );
+    })
+  );
+}
+
+function deleteRequest($action) {
+  return $action.ofType(DELETE_REQUEST).pipe(
+    switchMap(({ payload }) => {
+      const {
+        actionTypes: [request, success, failure] = [],
+        endpoint,
+        refresh,
+        uiKey,
+        meta
+      } = payload;
+      return concat(
+        observableOf({
+          type: request,
+          payload: meta
+        }),
+        observableOf({
+          type: LOADING,
+          payload: {
+            key: uiKey,
+            value: true
+          }
+        }),
+        ajax.delete(`${API_URL}${endpoint}`, headers()).pipe(
+          switchMap(() => {
+            return concat(
+              observableOf({
+                type: success
               }),
               observableOf({
                 type: LOADING,
