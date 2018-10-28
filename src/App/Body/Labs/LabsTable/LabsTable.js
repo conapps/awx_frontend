@@ -8,7 +8,7 @@ export default LabsTable;
 function LabsTable({ labs }) {
   return (
     <Table width="100%">
-      <Table.Head>
+      <Table.Head paddingRight={15}>
         <Table.TextHeaderCell>Name</Table.TextHeaderCell>
         <Table.TextHeaderCell flexBasis={100} flexShrink={0} flexGrow={0}>
           Inicio

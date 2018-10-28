@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Pane, Button, Spinner, Paragraph } from 'evergreen-ui';
 import LabsTable from './LabsTable/LabsTable.js';
-import LabSideSheet from './LabSideSheet/LabSideSheet.js';
+import LabSideSheet from '../LabSideSheet/LabSideSheet.js';
 
 class Labs extends React.Component {
   render() {
@@ -22,15 +22,10 @@ class Labs extends React.Component {
           padding={16}
           width="100%"
         >
-          <Button marginRight={16} onClick={index} isLoading={loading}>
+          <Button onClick={index} isLoading={loading}>
             Actualizar
           </Button>
-          <Button
-            marginRight={16}
-            intent="success"
-            iconBefore="plus"
-            onClick={openSideSheet}
-          >
+          <Button intent="success" iconBefore="plus" onClick={openSideSheet}>
             Nuevo Laboratorio
           </Button>
           <LabSideSheet

@@ -2,7 +2,7 @@ import compose from 'recompose/compose.js';
 import withHandlers from 'recompose/withHandlers.js';
 import { connect } from 'react-redux';
 import get from 'lodash/get.js';
-import withFormHandlers from '../../../../../common/handlers/withFormHandlers.js';
+import withFormHandlers from '../../../../common/handlers/withFormHandlers.js';
 import LabForm from './LabForm.js';
 
 const EnhancedLabForm = compose(
