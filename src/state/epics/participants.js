@@ -6,7 +6,8 @@ import {
   PARTICIPANTS_DELETE_SUCCESS,
   PARTICIPANTS_UPDATE_SUCCESS,
   PARTICIPANTS_SHOW_SUCCESS,
-  UI
+  UI,
+  NOOP
 } from '../actions.js';
 
 export default combineEpics(create, destroy, update, show);
@@ -31,12 +32,7 @@ function destroy($action) {
     map(() => {
       toaster.success('Participante eliminado');
       return {
-        type: UI,
-        payload: {
-          participants: {
-            isParticipantDeleteDialogOpen: false
-          }
-        }
+        type: NOOP
       };
     })
   );

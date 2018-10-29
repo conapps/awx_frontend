@@ -6,7 +6,8 @@ import {
   PARTICIPANTS_DELETE_FAILURE,
   PARTICIPANTS_DELETE_REQUEST,
   PARTICIPANTS_DELETE_SUCCESS,
-  UI
+  UI,
+  MULTI
 } from '../../../../../state/actions.js';
 import ParticipantRowMenu from './ParticipantRowMenu.js';
 
@@ -40,19 +41,32 @@ const EnhancedParticipantRowMenu = compose(
         }
       }),
       onDelete: id => ({
-        type: DELETE_REQUEST,
-        payload: {
-          endpoint: `/participants/${id}/`,
-          uiKey: 'participantsDelete',
-          meta: {
-            id
+        type: MULTI,
+        payload: [
+          {
+            type: UI,
+            payload: {
+              participants: {
+                isParticipantDeleteDialogOpen: false
+              }
+            }
           },
-          actionTypes: [
-            PARTICIPANTS_DELETE_REQUEST,
-            PARTICIPANTS_DELETE_SUCCESS,
-            PARTICIPANTS_DELETE_FAILURE
-          ]
-        }
+          {
+            type: DELETE_REQUEST,
+            payload: {
+              endpoint: `/participants/${id}/`,
+              uiKey: 'participantsDelete',
+              meta: {
+                id
+              },
+              actionTypes: [
+                PARTICIPANTS_DELETE_REQUEST,
+                PARTICIPANTS_DELETE_SUCCESS,
+                PARTICIPANTS_DELETE_FAILURE
+              ]
+            }
+          }
+        ]
       })
     }
   ),

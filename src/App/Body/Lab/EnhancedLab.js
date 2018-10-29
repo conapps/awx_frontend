@@ -23,10 +23,7 @@ import {
   LABS_DELETE_SUCCESS,
   PARTICIPANTS_INDEX_FAILURE,
   PARTICIPANTS_INDEX_REQUEST,
-  PARTICIPANTS_INDEX_SUCCESS,
-  PARTICIPANTS_DELETE_FAILURE,
-  PARTICIPANTS_DELETE_REQUEST,
-  PARTICIPANTS_DELETE_SUCCESS
+  PARTICIPANTS_INDEX_SUCCESS
 } from '../../../state/actions.js';
 import { labs as schema } from '../../../state/schemas.js';
 import { participants as participantsSchema } from '../../../state/schemas.js';
@@ -172,21 +169,6 @@ const EnhancedLab = compose(
             }
           }
         ]
-      }),
-      onParticipantDelete: id => ({
-        type: DELETE_REQUEST,
-        payload: {
-          endpoint: `/participants/${id}/`,
-          uiKey: 'participantsDelete',
-          meta: {
-            id
-          },
-          actionTypes: [
-            PARTICIPANTS_DELETE_REQUEST,
-            PARTICIPANTS_DELETE_SUCCESS,
-            PARTICIPANTS_DELETE_FAILURE
-          ]
-        }
       })
     }
   ),
@@ -195,8 +177,6 @@ const EnhancedLab = compose(
       update(lab, id);
     },
     onDelete: ({ onDelete, id }) => () => onDelete(id),
-    onParticipantDelete: ({ onParticipantDelete }) => id =>
-      onParticipantDelete(id),
     onParticipantsIndex: ({ indexParticipants, id }) => () =>
       indexParticipants(id)
   }),
