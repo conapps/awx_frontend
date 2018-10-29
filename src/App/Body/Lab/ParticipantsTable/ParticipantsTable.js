@@ -13,6 +13,7 @@ function ParticipantsTable({ participants }) {
         <Table.TextHeaderCell>Empresa</Table.TextHeaderCell>
         <Table.TextHeaderCell>AWS Region</Table.TextHeaderCell>
         <Table.TextHeaderCell>Pod</Table.TextHeaderCell>
+        <Table.TextHeaderCell>Último Playbook</Table.TextHeaderCell>
         <Table.TextHeaderCell>Status</Table.TextHeaderCell>
         <Table.TextHeaderCell
           flexBasis={80}
@@ -31,6 +32,7 @@ function ParticipantsTable({ participants }) {
             <Table.TextCell>{participant.data.company}</Table.TextCell>
             <Table.TextCell>{participant.data.awsRegion}</Table.TextCell>
             <Table.TextCell isNumber>{participant.data.pod}</Table.TextCell>
+            <Table.TextCell>{participant.data.lastPlaybook}</Table.TextCell>
             <Table.TextCell>{participant.data.status}</Table.TextCell>
             <Table.Cell
               display="flex"

@@ -6,9 +6,9 @@ import {
   UI,
   MULTI,
   POST_REQUEST,
-  JOBS_RUN_REQUEST,
-  JOBS_RUN_SUCCESS,
-  JOBS_RUN_FAILURE
+  JOBS_LAUNCH_REQUEST,
+  JOBS_LAUNCH_SUCCESS,
+  JOBS_LAUNCH_FAILURE
 } from '../../../state/actions.js';
 import { jobs as schema } from '../../../state/schemas.js';
 import PodDownDialog from './PodDownDialog.js';
@@ -71,9 +71,9 @@ const EnhancedPodDownDialog = compose(
               },
               schema,
               actionTypes: [
-                JOBS_RUN_REQUEST,
-                JOBS_RUN_SUCCESS,
-                JOBS_RUN_FAILURE
+                JOBS_LAUNCH_REQUEST,
+                JOBS_LAUNCH_SUCCESS,
+                JOBS_LAUNCH_FAILURE
               ]
             }
           }

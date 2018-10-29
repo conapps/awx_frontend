@@ -10,29 +10,30 @@ import {
   PARTICIPANTS_CREATE_SUCCESS,
   PARTICIPANTS_DELETE_SUCCESS,
   PARTICIPANTS_SHOW_SUCCESS,
-  JOBS_RUN_SUCCESS,
+  JOBS_LAUNCH_SUCCESS,
   PUT_REQUEST,
   UI,
-  NOOP,
-  ENTITY
+  NOOP
 } from '../actions.js';
 import { participants as participantsSchema } from '../schemas.js';
 
 export default combineEpics(create, destroy, update, show, jobSuccess);
 
 function jobSuccess($action) {
-  return $action.ofType(JOBS_RUN_SUCCESS).pipe(
+  return $action.ofType(JOBS_LAUNCH_SUCCESS).pipe(
     map(({ payload }) => {
       const id = get(payload, 'meta.id', undefined);
       const jobId = get(payload, 'result[0]');
       const status = get(payload, `entities.jobs.${jobId}.data.status`);
+      const lastPlaybook = get(payload, `entities.jobs.${jobId}.data.name`);
       return {
         type: PUT_REQUEST,
         payload: {
           endpoint: `/participants/${id}/`,
           body: {
             jobId,
-            status
+            status,
+            lastPlaybook
           },
           uiKey: 'participantsUpdate',
           schema: participantsSchema,
@@ -42,7 +43,10 @@ function jobSuccess($action) {
             PARTICIPANTS_UPDATE_FAILURE
           ],
           meta: {
-            ...normalize([{ id, data: { status, jobId } }], participantsSchema)
+            ...normalize(
+              [{ id, data: { status, jobId, lastPlaybook } }],
+              participantsSchema
+            )
           }
         }
       };
