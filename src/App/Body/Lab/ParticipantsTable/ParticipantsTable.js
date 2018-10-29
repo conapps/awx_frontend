@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table } from 'evergreen-ui';
 import ParticipantRowMenu from './ParticipantRowMenu/EnhancedParticipantRowMenu.js';
+import StatusBadge from './StatusBadge/StatusBadge.js';
 
 export default ParticipantsTable;
 
@@ -33,7 +34,11 @@ function ParticipantsTable({ participants }) {
             <Table.TextCell>{participant.data.awsRegion}</Table.TextCell>
             <Table.TextCell isNumber>{participant.data.pod}</Table.TextCell>
             <Table.TextCell>{participant.data.lastPlaybook}</Table.TextCell>
-            <Table.TextCell>{participant.data.status}</Table.TextCell>
+            <Table.TextCell>
+              {participant.data.status && (
+                <StatusBadge value={participant.data.status} />
+              )}
+            </Table.TextCell>
             <Table.Cell
               display="flex"
               alignItems="center"
