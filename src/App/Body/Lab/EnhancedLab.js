@@ -98,19 +98,19 @@ const EnhancedLab = compose(
           }
         }
       }),
-      openParticipantSideSheet: () => ({
-        type: UI,
-        payload: {
-          participants: {
-            isSideSheetOpen: true
-          }
-        }
-      }),
       closeSideSheet: () => ({
         type: UI,
         payload: {
           labs: {
             isSideSheetOpen: false
+          }
+        }
+      }),
+      openParticipantSideSheet: () => ({
+        type: UI,
+        payload: {
+          participants: {
+            isSideSheetOpen: true
           }
         }
       }),
@@ -122,26 +122,10 @@ const EnhancedLab = compose(
           }
         }
       }),
-      showParticipantLabDeleteDialog: () => ({
-        type: UI,
-        payload: {
-          participants: {
-            isLabDeleteDialogOpen: true
-          }
-        }
-      }),
       closeLabDeleteDialog: () => ({
         type: UI,
         payload: {
           labs: {
-            isLabDeleteDialogOpen: false
-          }
-        }
-      }),
-      closeParticipantsLabDeleteDialog: () => ({
-        type: UI,
-        payload: {
-          participants: {
             isLabDeleteDialogOpen: false
           }
         }

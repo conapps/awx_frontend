@@ -5,6 +5,7 @@ import LabSideSheet from '../LabSideSheet/LabSideSheet.js';
 import LabDeleteDialog from '../LabDeleteDialog/EnhancedLabDeleteDialog.js';
 import ParticipantsTable from './ParticipantsTable/EnhancedParticipantsTable.js';
 import ParticipantSideSheet from './ParticipantSideSheet/EnhancedParticipantSideSheet.js';
+import ParticipantDeleteDialog from './ParticipantDeleteDialog/EnhancedParticipantDeleteDialog.js';
 
 export default Lab;
 
@@ -37,6 +38,7 @@ function Lab({
       />
       <ParticipantSideSheet />
       <LabDeleteDialog onDelete={onDelete} close={closeLabDeleteDialog} />
+      <ParticipantDeleteDialog />
       <Pane elevation={1} width="100%" display="flex">
         <Pane width="100%" padding={16} flex={4} alignItems="center">
           <HorizontalTextInputField

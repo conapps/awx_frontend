@@ -15,19 +15,12 @@ const EnhancedParticipantRowMenu = compose(
   connect(
     () => ({}),
     {
-      showParticipantDeleteDialog: () => ({
+      openDeleteDialog: id => ({
         type: UI,
         payload: {
           participants: {
-            isParticipantDeleteDialogOpen: true
-          }
-        }
-      }),
-      closeParticipantDeleteDialog: () => ({
-        type: UI,
-        payload: {
-          participants: {
-            isParticipantDeleteDialogOpen: false
+            isDeleteDialogOpen: true,
+            deleting: id
           }
         }
       }),
@@ -39,40 +32,12 @@ const EnhancedParticipantRowMenu = compose(
             editing: id
           }
         }
-      }),
-      onDelete: id => ({
-        type: MULTI,
-        payload: [
-          {
-            type: UI,
-            payload: {
-              participants: {
-                isParticipantDeleteDialogOpen: false
-              }
-            }
-          },
-          {
-            type: DELETE_REQUEST,
-            payload: {
-              endpoint: `/participants/${id}/`,
-              uiKey: 'participantsDelete',
-              meta: {
-                id
-              },
-              actionTypes: [
-                PARTICIPANTS_DELETE_REQUEST,
-                PARTICIPANTS_DELETE_SUCCESS,
-                PARTICIPANTS_DELETE_FAILURE
-              ]
-            }
-          }
-        ]
       })
     }
   ),
   withHandlers({
     onEdit: ({ onEdit, id }) => () => onEdit(id),
-    onDelete: ({ onDelete, id }) => () => onDelete(id)
+    openDeleteDialog: ({ openDeleteDialog, id }) => () => openDeleteDialog(id)
   })
 )(ParticipantRowMenu);
 

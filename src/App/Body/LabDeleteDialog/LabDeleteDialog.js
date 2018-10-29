@@ -11,6 +11,7 @@ function LabDeleteDialog({ isShown, close, onDelete }) {
       intent="danger"
       onCloseComplete={close}
       onConfirm={onDelete}
+      onCancel={close}
       confirmLabel="Si, quiero eliminar el Laboratorio"
     >
       <Heading>¿Esta seguro que desea eliminar este laboratorio?</Heading>

@@ -14,7 +14,8 @@ const EnhancedParticipantSideSheet = compose(
         type: UI,
         payload: {
           participants: {
-            isSideSheetOpen: false
+            isSideSheetOpen: false,
+            editing: undefined
           }
         }
       })

@@ -9,7 +9,7 @@ function ParticipantDeleteDialog({ isShown, close, onDelete }) {
       isShown={isShown}
       title="Atención"
       intent="danger"
-      onCloseComplete={close}
+      onCancel={close}
       onConfirm={onDelete}
       confirmLabel="Si, quiero eliminar al Participante"
     >
