@@ -11,11 +11,12 @@ import {
   UI,
   NOOP,
   MULTI,
-  ENTITY
+  ENTITY,
+  PARTICIPANTS_DELETE_REQUEST
 } from '../actions.js';
 import { labs as labsSchema } from '../schemas.js';
 
-export default combineEpics(create, destroy, update, show);
+export default combineEpics(create, destroy, destroyRequest, update, show);
 
 function show($action) {
   return $action.ofType(PARTICIPANTS_SHOW_SUCCESS).pipe(
@@ -26,6 +27,32 @@ function show($action) {
         type: UI,
         payload: {
           title: `Participantes / ${participant.data.name}`
+        }
+      };
+    })
+  );
+}
+
+function destroyRequest($action, state$) {
+  return $action.ofType(PARTICIPANTS_DELETE_REQUEST).pipe(
+    map(({ payload }) => {
+      const labId = get(state$.value, 'ui.labs.editing', undefined);
+      const id = get(payload, 'id', undefined);
+      return {
+        type: ENTITY,
+        payload: {
+          arrayMerge: 'difference',
+          ...normalize(
+            [
+              {
+                id: labId,
+                data: {
+                  participants: [id]
+                }
+              }
+            ],
+            labsSchema
+          )
         }
       };
     })
