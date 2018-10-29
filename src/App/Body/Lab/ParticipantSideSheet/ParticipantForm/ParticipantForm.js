@@ -1,7 +1,23 @@
 import React from 'react';
-import { TextInputField, Button, Spinner } from 'evergreen-ui';
+import {
+  Select,
+  FormField,
+  TextInputField,
+  Button,
+  Spinner
+} from 'evergreen-ui';
 
 export default ParticipantForm;
+
+/** Constants */
+const AWS_REGIONS = [
+  'us-east-1',
+  'us-east-2',
+  'us-west-1',
+  'us-west-1',
+  'ca-central-1',
+  'sa-east-1'
+];
 
 function ParticipantForm({
   handleTextChange,
@@ -32,15 +48,26 @@ function ParticipantForm({
         value={form.company}
         onChange={handleTextChange('company')}
       />
-      <TextInputField
+      <FormField
+        marginBottom={24}
         label="AWS Region"
-        type="text"
-        required
-        description="Región de AWS donde se ejecutara el Pod."
+        isRequired={true}
         hint="Ej: us-east-1, us-east-2, us-west-1, etc."
-        value={form.awsRegion}
-        onChange={handleTextChange('awsRegion')}
-      />
+        description="Región de AWS donde se ejecutara el Pod."
+        labelFor="aws_region"
+      >
+        <Select
+          name="aws_region"
+          width="100%"
+          onChange={handleTextChange('awsRegion')}
+          value={form.awsRegion}
+        >
+          {AWS_REGIONS.map(region => (
+            <option value={region}>{region}</option>
+          ))}
+        </Select>
+      </FormField>
+
       <TextInputField
         label="Pod"
         type="number"
