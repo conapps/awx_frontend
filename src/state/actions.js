@@ -8,6 +8,10 @@ export const NOOP = `${PREFIX}/NOOP`;
 export const MULTI = `${PREFIX}/MULTI`;
 export const GO = `${PREFIX}/GO`;
 export const ENTITY = `${PREFIX}/ENTITY`;
+/** Jobs */
+export const JOBS_RUN_REQUEST = `${PREFIX}/JOBS_RUN_REQUEST`;
+export const JOBS_RUN_SUCCESS = `${PREFIX}/JOBS_RUN_SUCCESS`;
+export const JOBS_RUN_FAILURE = `${PREFIX}/JOBS_RUN_FAILURE`;
 /** Labs */
 export const LABS_INDEX_REQUEST = `${PREFIX}/LABS_INDEX_REQUEST`;
 export const LABS_INDEX_SUCCESS = `${PREFIX}/LABS_INDEX_SUCCESS`;

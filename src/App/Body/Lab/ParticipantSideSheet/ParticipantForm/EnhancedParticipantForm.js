@@ -85,7 +85,7 @@ const EnhancedParticipantForm = compose(
     name: '',
     email: '',
     company: '',
-    awsRegion: '',
+    awsRegion: 'us-east-1',
     pod: '',
     status: ''
   })

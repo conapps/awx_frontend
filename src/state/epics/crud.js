@@ -47,7 +47,10 @@ function postRequest($action) {
             return concat(
               observableOf({
                 type: success,
-                payload: normalize([response], schema)
+                payload: {
+                  ...normalize([response], schema),
+                  meta
+                }
               }),
               observableOf({
                 type: LOADING,
@@ -74,7 +77,11 @@ function postRequest($action) {
               }),
               observableOf({
                 type: failure,
-                payload: response
+                payload: {
+                  response,
+                  body,
+                  meta
+                }
               }),
               observableOf({
                 type: LOADING,
@@ -120,7 +127,10 @@ function putRequest($action) {
             return concat(
               observableOf({
                 type: success,
-                payload: normalize([response], schema)
+                payload: {
+                  ...normalize([response], schema),
+                  meta
+                }
               }),
               observableOf({
                 type: LOADING,
@@ -197,7 +207,10 @@ function getRequest($action) {
             return concat(
               observableOf({
                 type: success,
-                payload: normalize(items, schema)
+                payload: {
+                  ...normalize(items, schema),
+                  meta
+                }
               }),
               observableOf({
                 type: LOADING,
@@ -243,7 +256,7 @@ function getRequest($action) {
 
 function deleteRequest($action) {
   return $action.ofType(DELETE_REQUEST).pipe(
-    mergeMap(({ payload }) => {
+    mergeMap(({ type, payload }) => {
       const {
         actionTypes: [request, success, failure] = [],
         endpoint,
@@ -281,7 +294,7 @@ function deleteRequest($action) {
           catchError(response => {
             if (response.status === 401 && refresh === undefined) {
               console.log('Unauthorized');
-              return tryRefreshingTokens$(payload);
+              return tryRefreshingTokens$({ type, payload });
             }
 
             return concat(
@@ -311,14 +324,16 @@ function deleteRequest($action) {
   );
 }
 /** Observables */
-function tryRefreshingTokens$(payload) {
-  console.log(payload);
+function tryRefreshingTokens$({ type, payload }) {
   return observableOf({
     type: REFRESH_TOKENS,
     payload: {
       success: {
-        ...payload,
-        refresh: true
+        type,
+        payload: {
+          ...payload,
+          refresh: true
+        }
       },
       failure: {
         type: LOGOUT

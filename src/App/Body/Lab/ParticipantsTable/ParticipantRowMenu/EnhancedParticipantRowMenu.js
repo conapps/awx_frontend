@@ -17,6 +17,24 @@ const EnhancedParticipantRowMenu = compose(
           }
         }
       }),
+      openPodUpDialog: id => ({
+        type: UI,
+        payload: {
+          participants: {
+            isPodUpDialogOpen: true,
+            editing: id
+          }
+        }
+      }),
+      openPodDownDialog: id => ({
+        type: UI,
+        payload: {
+          participants: {
+            isPodDownDialogOpen: true,
+            editing: id
+          }
+        }
+      }),
       onEdit: id => ({
         type: UI,
         payload: {
@@ -30,7 +48,10 @@ const EnhancedParticipantRowMenu = compose(
   ),
   withHandlers({
     onEdit: ({ onEdit, id }) => () => onEdit(id),
-    openDeleteDialog: ({ openDeleteDialog, id }) => () => openDeleteDialog(id)
+    openDeleteDialog: ({ openDeleteDialog, id }) => () => openDeleteDialog(id),
+    openPodUpDialog: ({ openPodUpDialog, id }) => () => openPodUpDialog(id),
+    openPodDownDialog: ({ openPodDownDialog, id }) => () =>
+      openPodDownDialog(id)
   })
 )(ParticipantRowMenu);
 

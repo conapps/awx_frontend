@@ -14,7 +14,7 @@ const AWS_REGIONS = [
   'us-east-1',
   'us-east-2',
   'us-west-1',
-  'us-west-1',
+  'us-west-2',
   'ca-central-1',
   'sa-east-1'
 ];
@@ -63,7 +63,9 @@ function ParticipantForm({
           value={form.awsRegion}
         >
           {AWS_REGIONS.map(region => (
-            <option value={region}>{region}</option>
+            <option key={region} value={region}>
+              {region}
+            </option>
           ))}
         </Select>
       </FormField>
