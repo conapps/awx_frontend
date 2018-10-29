@@ -4,14 +4,14 @@ import ParticipantForm from './ParticipantForm/EnhancedParticipantForm.js';
 
 export default ParticipantSideSheet;
 
-function ParticipantSideSheet({ isShown, close, onSubmit }) {
+function ParticipantSideSheet({ isShown, close }) {
   return (
     <SideSheet isShown={isShown} onCloseComplete={close}>
       <Pane padding={16}>
         <Heading size={600} marginBottom={16}>
           Participante
         </Heading>
-        <ParticipantForm onSubmit={onSubmit} />
+        <ParticipantForm />
       </Pane>
     </SideSheet>
   );

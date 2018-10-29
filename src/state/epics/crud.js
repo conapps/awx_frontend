@@ -312,6 +312,7 @@ function deleteRequest($action) {
 }
 /** Observables */
 function tryRefreshingTokens$(payload) {
+  console.log(payload);
   return observableOf({
     type: REFRESH_TOKENS,
     payload: {

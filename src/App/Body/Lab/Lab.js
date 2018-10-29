@@ -4,22 +4,19 @@ import HorizontalTextInputField from './HorizontalTextInputField/HorizontalTextI
 import LabSideSheet from '../LabSideSheet/LabSideSheet.js';
 import LabDeleteDialog from '../LabDeleteDialog/EnhancedLabDeleteDialog.js';
 import ParticipantsTable from './ParticipantsTable/EnhancedParticipantsTable.js';
-import ParticipantSideSheet from './ParticipantSideSheet/ParticipantSideSheet.js';
+import ParticipantSideSheet from './ParticipantSideSheet/EnhancedParticipantSideSheet.js';
 
 export default Lab;
 
 function Lab({
   closeLabDeleteDialog,
   closeSideSheet,
-  closeParticipantSideSheet,
   isSideSheetOpen,
-  isParticipantSideSheetOpen,
-  indexParticipants,
+  onParticipantsIndex,
   participantsLoading,
   lab,
   onDelete,
   onSubmit,
-  onParticipantSubmit,
   openSideSheet,
   openParticipantSideSheet,
   showLabDeleteDialog
@@ -38,11 +35,7 @@ function Lab({
         close={closeSideSheet}
         onSubmit={onSubmit}
       />
-      <ParticipantSideSheet
-        isShown={isParticipantSideSheetOpen}
-        close={closeParticipantSideSheet}
-        onSubmit={onParticipantSubmit}
-      />
+      <ParticipantSideSheet />
       <LabDeleteDialog onDelete={onDelete} close={closeLabDeleteDialog} />
       <Pane elevation={1} width="100%" display="flex">
         <Pane width="100%" padding={16} flex={4} alignItems="center">
@@ -119,7 +112,7 @@ function Lab({
           justifyContent="flex-end"
         >
           <Button
-            onClick={indexParticipants}
+            onClick={onParticipantsIndex}
             isLoading={participantsLoading}
             marginRight={16}
           >

@@ -11,7 +11,6 @@ import {
   GO,
   GET_REQUEST,
   PUT_REQUEST,
-  POST_REQUEST,
   DELETE_REQUEST,
   LABS_SHOW_FAILURE,
   LABS_SHOW_REQUEST,
@@ -25,12 +24,6 @@ import {
   PARTICIPANTS_INDEX_FAILURE,
   PARTICIPANTS_INDEX_REQUEST,
   PARTICIPANTS_INDEX_SUCCESS,
-  PARTICIPANTS_CREATE_FAILURE,
-  PARTICIPANTS_CREATE_REQUEST,
-  PARTICIPANTS_CREATE_SUCCESS,
-  PARTICIPANTS_UPDATE_FAILURE,
-  PARTICIPANTS_UPDATE_REQUEST,
-  PARTICIPANTS_UPDATE_SUCCESS,
   PARTICIPANTS_DELETE_FAILURE,
   PARTICIPANTS_DELETE_REQUEST,
   PARTICIPANTS_DELETE_SUCCESS
@@ -49,11 +42,6 @@ const EnhancedLab = compose(
       labLoading: get(state, 'ui.loading.labsUpdate', false),
       participantsLoading: get(state, 'ui.loading.participantsIndex', false),
       isSideSheetOpen: get(state, 'ui.labs.isSideSheetOpen', false),
-      isParticipantSideSheetOpen: get(
-        state,
-        'ui.participants.isSideSheetOpen',
-        false
-      ),
       participantId: get(state, `ui.participants.editing`, undefined)
     }),
     {
@@ -92,10 +80,10 @@ const EnhancedLab = compose(
           }
         }
       }),
-      indexParticipants: () => ({
+      indexParticipants: labId => ({
         type: GET_REQUEST,
         payload: {
-          endpoint: '/participants/',
+          endpoint: `/participants/?filterBy=labId&filterValue=${labId}&limit=100`,
           uiKey: 'participantsIndex',
           schema: participantsSchema,
           actionTypes: [
@@ -103,37 +91,6 @@ const EnhancedLab = compose(
             PARTICIPANTS_INDEX_SUCCESS,
             PARTICIPANTS_INDEX_FAILURE
           ]
-        }
-      }),
-      createParticipant: participants => ({
-        type: POST_REQUEST,
-        payload: {
-          endpoint: '/participants/',
-          body: participants,
-          uiKey: 'participantsCreate',
-          schema: participantsSchema,
-          actionTypes: [
-            PARTICIPANTS_CREATE_REQUEST,
-            PARTICIPANTS_CREATE_SUCCESS,
-            PARTICIPANTS_CREATE_FAILURE
-          ]
-        }
-      }),
-      updateParticipant: (lab, id) => ({
-        type: PUT_REQUEST,
-        payload: {
-          endpoint: `/participants/${id}/`,
-          body: lab,
-          uiKey: 'participantsUpdate',
-          schema: participantsSchema,
-          actionTypes: [
-            PARTICIPANTS_UPDATE_REQUEST,
-            PARTICIPANTS_UPDATE_SUCCESS,
-            PARTICIPANTS_UPDATE_FAILURE
-          ],
-          meta: {
-            ...normalize([{ id, data: lab }], participantsSchema)
-          }
         }
       }),
       openSideSheet: () => ({
@@ -157,15 +114,6 @@ const EnhancedLab = compose(
         payload: {
           labs: {
             isSideSheetOpen: false
-          }
-        }
-      }),
-      closeParticipantSideSheet: () => ({
-        type: UI,
-        payload: {
-          participants: {
-            isSideSheetOpen: false,
-            editing: false
           }
         }
       }),
@@ -246,26 +194,17 @@ const EnhancedLab = compose(
     onSubmit: ({ update, id }) => lab => {
       update(lab, id);
     },
-    onParticipantSubmit: ({ createParticipant, updateParticipant, id }) => (
-      participant,
-      participantId
-    ) => {
-      if (participantId === undefined)
-        createParticipant({
-          ...participant,
-          labId: id
-        });
-      else updateParticipant(participant, participantId);
-    },
     onDelete: ({ onDelete, id }) => () => onDelete(id),
     onParticipantDelete: ({ onParticipantDelete }) => id =>
-      onParticipantDelete(id)
+      onParticipantDelete(id),
+    onParticipantsIndex: ({ indexParticipants, id }) => () =>
+      indexParticipants(id)
   }),
   lifecycle({
     componentDidMount() {
       this.props.show(this.props.id);
       this.props.editUI(this.props.id);
-      this.props.indexParticipants();
+      this.props.indexParticipants(this.props.id);
     }
   })
 )(Lab);

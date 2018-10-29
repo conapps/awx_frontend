@@ -1,12 +1,12 @@
 /** Constants */
 const PREFIX = '@@AWX';
 /** UI */
-export const UI = `${PREFIX}_UI`;
-export const ERROR = `${PREFIX}_ERROR`;
-export const LOADING = `${PREFIX}_LOADING`;
-export const NOOP = `${PREFIX}_NOOP`;
-export const MULTI = `${PREFIX}_MULTI`;
-export const GO = `${PREFIX}_GO`;
+export const UI = `${PREFIX}/UI`;
+export const ERROR = `${PREFIX}/ERROR`;
+export const LOADING = `${PREFIX}/LOADING`;
+export const NOOP = `${PREFIX}/NOOP`;
+export const MULTI = `${PREFIX}/MULTI`;
+export const GO = `${PREFIX}/GO`;
 /** Labs */
 export const LABS_INDEX_REQUEST = `${PREFIX}/LABS_INDEX_REQUEST`;
 export const LABS_INDEX_SUCCESS = `${PREFIX}/LABS_INDEX_SUCCESS`;
