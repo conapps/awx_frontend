@@ -7,6 +7,7 @@ export const LOADING = `${PREFIX}/LOADING`;
 export const NOOP = `${PREFIX}/NOOP`;
 export const MULTI = `${PREFIX}/MULTI`;
 export const GO = `${PREFIX}/GO`;
+export const ENTITY = `${PREFIX}/ENTITY`;
 /** Labs */
 export const LABS_INDEX_REQUEST = `${PREFIX}/LABS_INDEX_REQUEST`;
 export const LABS_INDEX_SUCCESS = `${PREFIX}/LABS_INDEX_SUCCESS`;

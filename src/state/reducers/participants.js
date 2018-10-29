@@ -30,8 +30,10 @@ function participants(
 }
 /** Functions */
 export function getParticipants(state) {
-  const ids = get(state, 'participants.ids', []);
+  const labId = get(state, 'ui.labs.editing', undefined);
   const participants = get(state, 'entities.participants', {});
+  const lab = get(state, `entities.labs.${labId}`, {});
+  const ids = get(lab, 'data.participants', []);
 
-  return ids.map(id => participants[id]);
+  return ids.map(id => participants[id]).filter(item => item !== undefined);
 }
