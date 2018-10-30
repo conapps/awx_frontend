@@ -11,7 +11,8 @@ import {
   JOBS_SHOW_FAILURE,
   ENTITY,
   PARTICIPANTS_INDEX_SUCCESS,
-  GET_REQUEST
+  GET_REQUEST,
+  NOOP
 } from '../actions.js';
 import {
   participants as participantsSchema,
@@ -27,6 +28,9 @@ function success($action) {
       const status = get(payload, `entities.jobs.${id}.data.status`, {});
       const lastPlaybook = get(payload, `entities.jobs.${id}.data.name`, {});
       const participantId = get(payload, 'meta.participantId', undefined);
+
+      if (participantId === undefined) return { type: NOOP };
+
       return {
         type: ENTITY,
         payload: {

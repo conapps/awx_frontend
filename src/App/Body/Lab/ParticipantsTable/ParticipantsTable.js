@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table } from 'evergreen-ui';
+import { Link } from 'react-router-dom';
 import ParticipantRowMenu from './ParticipantRowMenu/EnhancedParticipantRowMenu.js';
 import StatusBadge from './StatusBadge/StatusBadge.js';
 
@@ -28,7 +29,11 @@ function ParticipantsTable({ participants }) {
       <Table.VirtualBody height="calc(100vh - 324px - 32px)">
         {participants.map(participant => (
           <Table.Row key={participant.id} paddingRight={15}>
-            <Table.TextCell>{participant.data.name}</Table.TextCell>
+            <Table.TextCell>
+              <Link to={`/participants/${participant.id}/`}>
+                {participant.data.name}
+              </Link>
+            </Table.TextCell>
             <Table.TextCell>{participant.data.email}</Table.TextCell>
             <Table.TextCell>{participant.data.company}</Table.TextCell>
             <Table.TextCell>{participant.data.awsRegion}</Table.TextCell>

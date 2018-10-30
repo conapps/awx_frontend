@@ -1,7 +1,8 @@
 import { combineEpics } from 'redux-observable';
+import { from as observableFrom } from 'rxjs';
 import get from 'lodash/get.js';
 import { normalize } from 'normalizr';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { toaster } from 'evergreen-ui';
 import {
   PARTICIPANTS_UPDATE_REQUEST,
@@ -10,12 +11,23 @@ import {
   PARTICIPANTS_CREATE_SUCCESS,
   PARTICIPANTS_DELETE_SUCCESS,
   PARTICIPANTS_SHOW_SUCCESS,
+  JOBS_SHOW_REQUEST,
+  JOBS_SHOW_SUCCESS,
+  JOBS_SHOW_FAILURE,
+  LABS_SHOW_REQUEST,
+  LABS_SHOW_SUCCESS,
+  LABS_SHOW_FAILURE,
   JOBS_LAUNCH_SUCCESS,
   PUT_REQUEST,
+  GET_REQUEST,
   UI,
   NOOP
 } from '../actions.js';
-import { participants as participantsSchema } from '../schemas.js';
+import {
+  participants as participantsSchema,
+  jobs as jobsSchema,
+  labs as labsSchema
+} from '../schemas.js';
 
 export default combineEpics(create, destroy, update, show, jobSuccess);
 
@@ -56,15 +68,79 @@ function jobSuccess($action) {
 
 function show($action) {
   return $action.ofType(PARTICIPANTS_SHOW_SUCCESS).pipe(
-    map(({ payload }) => {
-      const id = payload.result[0];
-      const participant = payload.entities.participants[id];
-      return {
-        type: UI,
-        payload: {
-          title: `Participantes / ${participant.data.name}`
+    switchMap(({ payload }) => {
+      const id = get(payload, 'result[0]');
+      const participant = get(payload, `entities.participants.${id}`);
+      const deep = get(payload, 'meta.deep', false);
+      const actions = [
+        {
+          type: UI,
+          payload: {
+            title: `Participantes / ${participant.data.name}`,
+            participants: {
+              editing: id
+            }
+          }
         }
-      };
+      ];
+
+      if (deep === true) {
+        const labId = get(participant, 'data.labId');
+        const jobId = get(participant, 'data.jobId');
+
+        if (labId !== undefined) {
+          actions.push({
+            type: UI,
+            payload: {
+              labs: {
+                editing: labId
+              }
+            }
+          });
+          actions.push({
+            type: GET_REQUEST,
+            payload: {
+              endpoint: `/labs/${labId}/`,
+              uiKey: 'labsShow',
+              schema: labsSchema,
+              actionTypes: [
+                LABS_SHOW_REQUEST,
+                LABS_SHOW_SUCCESS,
+                LABS_SHOW_FAILURE
+              ],
+              meta: {
+                editUI: false
+              }
+            }
+          });
+        }
+
+        if (jobId !== undefined) {
+          actions.push({
+            type: UI,
+            payload: {
+              jobs: {
+                editing: jobId
+              }
+            }
+          });
+          actions.push({
+            type: GET_REQUEST,
+            payload: {
+              endpoint: `/jobs/${jobId}/`,
+              uiKey: 'jobsShow',
+              schema: jobsSchema,
+              actionTypes: [
+                JOBS_SHOW_REQUEST,
+                JOBS_SHOW_SUCCESS,
+                JOBS_SHOW_FAILURE
+              ]
+            }
+          });
+        }
+      }
+
+      return observableFrom(actions);
     })
   );
 }

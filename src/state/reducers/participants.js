@@ -3,6 +3,7 @@ import get from 'lodash/get.js';
 import {
   PARTICIPANTS_CREATE_SUCCESS,
   PARTICIPANTS_INDEX_SUCCESS,
+  PARTICIPANTS_SHOW_SUCCESS,
   PARTICIPANTS_DELETE_REQUEST
 } from '../actions.js';
 
@@ -15,6 +16,7 @@ function participants(
   switch (type) {
     case PARTICIPANTS_CREATE_SUCCESS:
     case PARTICIPANTS_INDEX_SUCCESS:
+    case PARTICIPANTS_SHOW_SUCCESS:
       return {
         ...state,
         ids: union(state.ids, payload.result)

@@ -1,4 +1,5 @@
 import { combineEpics } from 'redux-observable';
+import get from 'lodash/get.js';
 import { map } from 'rxjs/operators';
 import { toaster } from 'evergreen-ui';
 import {
@@ -6,7 +7,8 @@ import {
   LABS_DELETE_SUCCESS,
   LABS_UPDATE_SUCCESS,
   LABS_SHOW_SUCCESS,
-  UI
+  UI,
+  NOOP
 } from '../actions.js';
 
 export default combineEpics(create, destroy, update, show);
@@ -14,12 +16,19 @@ export default combineEpics(create, destroy, update, show);
 function show($action) {
   return $action.ofType(LABS_SHOW_SUCCESS).pipe(
     map(({ payload }) => {
-      const id = payload.result[0];
-      const lab = payload.entities.labs[id];
+      const id = get(payload, 'result[0]');
+      const lab = get(payload, `entities.labs.${id}`);
+      const editUI = get(payload, 'meta.editUI', true);
+
+      if (editUI === false) return { type: NOOP };
+
       return {
         type: UI,
         payload: {
-          title: `Laboratorios / ${lab.data.name}`
+          title: `Laboratorios / ${lab.data.name}`,
+          labs: {
+            editiing: lab.id
+          }
         }
       };
     })
