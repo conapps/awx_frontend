@@ -5,7 +5,7 @@ export default ParticipantLabHeading;
 
 function ParticipantLabHeading({ lab }) {
   return (
-    <Pane display="flex" width="100%">
+    <Pane display="flex" width="100%" padding={16} flex={2}>
       <Pane flex="2">
         <Heading>{lab.data.name}</Heading>
       </Pane>

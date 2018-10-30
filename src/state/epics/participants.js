@@ -134,7 +134,10 @@ function show($action) {
                 JOBS_SHOW_REQUEST,
                 JOBS_SHOW_SUCCESS,
                 JOBS_SHOW_FAILURE
-              ]
+              ],
+              meta: {
+                participantId: id
+              }
             }
           });
         }

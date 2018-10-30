@@ -8,18 +8,37 @@ import {
   JOBS_LAUNCH_FAILURE,
   JOBS_SHOW_REQUEST,
   JOBS_SHOW_SUCCESS,
+  JOBS_STDOUT_SUCCESS,
   JOBS_SHOW_FAILURE,
   ENTITY,
   PARTICIPANTS_INDEX_SUCCESS,
   GET_REQUEST,
-  NOOP
+  NOOP,
+  UI
 } from '../actions.js';
 import {
   participants as participantsSchema,
   jobs as jobsSchema
 } from '../schemas.js';
 
-export default combineEpics(failure, jobStatus, success);
+export default combineEpics(failure, jobStatus, success, stdoutSuccess);
+
+function stdoutSuccess($action) {
+  return $action.ofType(JOBS_STDOUT_SUCCESS).pipe(
+    map(({ payload }) => {
+      const result = get(payload, 'result', undefined);
+
+      return {
+        type: UI,
+        payload: {
+          jobs: {
+            stdout: result
+          }
+        }
+      };
+    })
+  );
+}
 
 function success($action) {
   return $action.ofType(JOBS_SHOW_SUCCESS).pipe(

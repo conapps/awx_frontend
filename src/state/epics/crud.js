@@ -199,16 +199,21 @@ function getRequest($action) {
         }),
         ajax.get(`${API_URL}${endpoint}`, headers()).pipe(
           switchMap(({ response }) => {
-            let items =
+            let result =
               response && Array.isArray(response.items)
                 ? response.items
-                : [response];
+                : response;
 
             return concat(
               observableOf({
                 type: success,
                 payload: {
-                  ...normalize(items, schema),
+                  ...(schema !== undefined
+                    ? normalize(
+                        Array.isArray(result) ? result : [result],
+                        schema
+                      )
+                    : { result }),
                   meta
                 }
               }),

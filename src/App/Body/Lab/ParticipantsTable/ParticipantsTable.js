@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'evergreen-ui';
 import { Link } from 'react-router-dom';
 import ParticipantRowMenu from './ParticipantRowMenu/EnhancedParticipantRowMenu.js';
-import StatusBadge from './StatusBadge/StatusBadge.js';
+import StatusBadge from '../../StatusBadge/StatusBadge.js';
 
 export default ParticipantsTable;
 

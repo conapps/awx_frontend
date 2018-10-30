@@ -29,10 +29,13 @@ const EnhancedParticipant = compose(
       editUi: id => ({
         type: UI,
         payload: {
+          jobs: {
+            stdout: ''
+          },
           participants: {
             editing: id
           },
-          title: `Participante / ${id}`
+          title: `Participantes / ${id}`
         }
       }),
       getParticipant: id => ({
