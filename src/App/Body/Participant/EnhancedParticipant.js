@@ -18,19 +18,45 @@ const EnhancedParticipant = compose(
       const id = get(props, 'match.params.id');
       const participant = get(state, `entities.participants.${id}`);
       const labId = get(participant, 'data.labId');
+      const jobId = get(participant, 'data.jobId');
       const lab = get(state, `entities.labs.${labId}`);
+      let job;
+
+      let isReady = participant !== undefined && lab !== undefined;
+
+      if (jobId !== undefined) {
+        job = get(state, `entities.jobs.${jobId}`);
+        isReady = isReady && job !== undefined;
+      }
+
+      console.log(isReady, job);
 
       return {
         id,
-        isReady: !!participant && !!lab
+        isReady,
+        labId,
+        jobId,
+        activeTab: get(state, 'ui.participants.activeTab', 'Stdout')
       };
     },
     {
-      editUi: id => ({
+      onSelectTab: tab => ({
+        type: UI,
+        payload: {
+          participants: {
+            activeTab: tab
+          }
+        }
+      }),
+      editUi: ({ id, jobId, labId }) => ({
         type: UI,
         payload: {
           jobs: {
-            stdout: ''
+            stdout: '',
+            editing: jobId
+          },
+          labs: {
+            editing: labId
           },
           participants: {
             editing: id
@@ -38,7 +64,7 @@ const EnhancedParticipant = compose(
           title: `Participantes / ${id}`
         }
       }),
-      getParticipant: id => ({
+      getParticipant: ({ id }) => ({
         type: GET_REQUEST,
         payload: {
           endpoint: `/participants/${id}/`,
@@ -58,8 +84,8 @@ const EnhancedParticipant = compose(
   ),
   lifecycle({
     componentWillMount() {
-      this.props.editUi(this.props.id);
-      this.props.getParticipant(this.props.id);
+      this.props.editUi(this.props);
+      this.props.getParticipant(this.props);
     }
   })
 )(Participant);

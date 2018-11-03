@@ -3,6 +3,7 @@ import { Table } from 'evergreen-ui';
 import { Link } from 'react-router-dom';
 import ParticipantRowMenu from './ParticipantRowMenu/EnhancedParticipantRowMenu.js';
 import StatusBadge from '../../StatusBadge/StatusBadge.js';
+import LastPlaybookBadge from '../../LastPlaybookBadge/EnhancedLastPlaybookBadge.js';
 
 export default ParticipantsTable;
 
@@ -38,7 +39,9 @@ function ParticipantsTable({ participants }) {
             <Table.TextCell>{participant.data.company}</Table.TextCell>
             <Table.TextCell>{participant.data.awsRegion}</Table.TextCell>
             <Table.TextCell isNumber>{participant.data.pod}</Table.TextCell>
-            <Table.TextCell>{participant.data.lastPlaybook}</Table.TextCell>
+            <Table.TextCell>
+              <LastPlaybookBadge label={participant.data.lastPlaybook} />
+            </Table.TextCell>
             <Table.TextCell>
               {participant.data.status && (
                 <StatusBadge value={participant.data.status} />

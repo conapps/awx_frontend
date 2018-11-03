@@ -8,6 +8,7 @@ import App from './App/EnhancedApp.js';
 import * as serviceWorker from './serviceWorker';
 import store from './state/store.js';
 import history from './modules/history.js';
+import './state/connectHistoryToReduxObservable.js';
 
 const $rootEl = document.getElementById('root');
 

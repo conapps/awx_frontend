@@ -34,3 +34,11 @@ export function getLabs(state) {
 
   return ids.map(id => labs[id]);
 }
+
+export function getActiveLab(state) {
+  const activeLabId = get(state, 'ui.labs.editing');
+
+  if (activeLabId === undefined) return;
+
+  return get(state, `entities.labs.${activeLabId}`, {});
+}

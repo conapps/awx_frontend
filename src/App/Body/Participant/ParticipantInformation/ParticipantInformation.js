@@ -6,7 +6,7 @@ export default ParticipantInformation;
 
 function ParticipantInformation({ participant }) {
   return (
-    <Pane flex={1} padding={16} minWidth={500}>
+    <Pane flex={1} minWidth={300} paddingRight={8}>
       <FormField
         marginBottom={24}
         label="Estado"

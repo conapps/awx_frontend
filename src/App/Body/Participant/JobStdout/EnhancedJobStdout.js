@@ -7,16 +7,22 @@ import {
   GET_REQUEST,
   JOBS_STDOUT_REQUEST,
   JOBS_STDOUT_SUCCESS,
-  JOBS_STDOUT_FAILURE
+  JOBS_STDOUT_FAILURE,
+  JOBS_STDOUT_TRACK
 } from '../../../../state/actions.js';
 
 const EnhancedJobStdout = compose(
   connect(
     state => ({
       id: get(state, 'ui.jobs.editing'),
-      body: get(state, 'ui.jobs.stdout', '')
+      body: get(state, 'ui.jobs.stdout', ''),
+      followStdout: get(state, 'ui.jobs.stdoutTrack', false)
     }),
     {
+      onStdoutTrack: e => ({
+        type: JOBS_STDOUT_TRACK,
+        payload: e.target.checked
+      }),
       getStdout: id => ({
         type: GET_REQUEST,
         payload: {

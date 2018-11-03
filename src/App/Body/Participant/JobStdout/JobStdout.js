@@ -1,26 +1,48 @@
 import './JobStdout.css';
 import React, { Fragment } from 'react';
-import { Pane, Heading } from 'evergreen-ui';
+import { Pane, Switch } from 'evergreen-ui';
 
 export default JobStdout;
 
-function JobStdout({ body }) {
+function JobStdout({ body, followStdout, onStdoutTrack }) {
   return (
     <Fragment>
       <Pane
         display="flex"
         flexDirection="column"
         flex={3}
-        padding={16}
         maxWidth={700}
+        minWidth={700}
+        padding={0}
+        marginTop={-40}
       >
-        <Heading marginBottom={8}>Salida del la última ejecución</Heading>
+        <Pane
+          display="flex"
+          alignItems="center"
+          paddingTop={16}
+          paddingBottom={16}
+          justifyContent="flex-end"
+        >
+          <Pane marginRight={16} fontSize={12}>
+            Seguir <code>stdout</code>
+          </Pane>
+          <Pane>
+            <Switch
+              label="Seguir salida"
+              checked={followStdout}
+              onChange={onStdoutTrack}
+            />
+          </Pane>
+        </Pane>
         <Pane
           className="JobStdout"
-          height="calc(100vh - 190px)"
+          height="calc(100vh - 170px)"
           overflowY="scroll"
           border="default"
-          padding={8}
+          paddingTop={0}
+          paddingBottom={0}
+          paddingRight={8}
+          paddingLeft={8}
         >
           <div dangerouslySetInnerHTML={{ __html: body }} />
         </Pane>

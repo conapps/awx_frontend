@@ -1,3 +1,4 @@
 .JobStdout pre {
+  margin: 0;
   white-space: pre-line;
 }

@@ -1,27 +1,123 @@
-import { combineEpics } from 'redux-observable';
-import { from as observableFrom } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { combineEpics, ofType } from 'redux-observable';
+import { from as observableFrom, interval as observableInterval } from 'rxjs';
+import {
+  map,
+  mapTo,
+  mergeMap,
+  switchMap,
+  takeUntil,
+  startWith
+} from 'rxjs/operators';
 import get from 'lodash/get.js';
 import { normalize } from 'normalizr';
-import { map } from 'rxjs/operators';
 import {
+  ROUTE_UPDATE,
   JOBS_LAUNCH_FAILURE,
   JOBS_SHOW_REQUEST,
   JOBS_SHOW_SUCCESS,
   JOBS_STDOUT_SUCCESS,
   JOBS_SHOW_FAILURE,
+  JOBS_STDOUT_TRACK,
+  JOBS_STDOUT_SUBSCRIBE,
+  JOBS_STDOUT_UNSUBSCRIBE,
+  JOBS_STDOUT_REQUEST,
+  JOBS_STDOUT_FAILURE,
   ENTITY,
   PARTICIPANTS_INDEX_SUCCESS,
   GET_REQUEST,
   NOOP,
+  MULTI,
   UI
 } from '../actions.js';
 import {
   participants as participantsSchema,
   jobs as jobsSchema
 } from '../schemas.js';
+import { getActiveJob } from '../reducers/jobs.js';
 
-export default combineEpics(failure, jobStatus, success, stdoutSuccess);
+/** Constants */
+const INTERVAL = 1000 * 30; /* 1 minutes */
+
+export default combineEpics(
+  failure,
+  jobStatus,
+  success,
+  stdoutSuccess,
+  stdoutTrack,
+  stdoutSubscription,
+  stdoutUnsubscribeOnRouteUpdate
+);
+
+function stdoutUnsubscribeOnRouteUpdate($action) {
+  return $action.ofType(ROUTE_UPDATE).pipe(
+    mapTo({
+      type: MULTI,
+      payload: [
+        { type: JOBS_STDOUT_UNSUBSCRIBE },
+        {
+          type: UI,
+          payload: { jobs: { stdoutTrack: false } }
+        }
+      ]
+    })
+  );
+}
+
+function stdoutSubscription($action, $state) {
+  return $action.ofType(JOBS_STDOUT_SUBSCRIBE).pipe(
+    switchMap(() => {
+      const id = get($state.value, 'ui.jobs.editing', undefined);
+
+      if (id === undefined) return { type: NOOP };
+
+      return observableInterval(INTERVAL).pipe(
+        startWith(0),
+        mapTo({
+          type: GET_REQUEST,
+          payload: {
+            endpoint: `/jobs/stdout/${id}/`,
+            uiKey: 'jobsStdout',
+            actionTypes: [
+              JOBS_STDOUT_REQUEST,
+              JOBS_STDOUT_SUCCESS,
+              JOBS_STDOUT_FAILURE
+            ]
+          }
+        }),
+        takeUntil($action.pipe(ofType(JOBS_STDOUT_UNSUBSCRIBE)))
+      );
+    })
+  );
+}
+
+function stdoutTrack($action, $state) {
+  return $action.ofType(JOBS_STDOUT_TRACK).pipe(
+    map(({ payload }) => {
+      const job = getActiveJob($state.value);
+      const actions = [
+        {
+          type: UI,
+          payload: {
+            jobs: {
+              stdoutTrack: payload
+            }
+          }
+        }
+      ];
+
+      if (job.data.status === 'running') {
+        actions.push({
+          type: JOBS_STDOUT_SUBSCRIBE
+        });
+      }
+
+      return {
+        type: MULTI,
+        payload: actions
+      };
+    })
+  );
+}
 
 function stdoutSuccess($action) {
   return $action.ofType(JOBS_STDOUT_SUCCESS).pipe(
