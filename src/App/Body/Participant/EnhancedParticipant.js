@@ -51,7 +51,8 @@ const EnhancedParticipant = compose(
         payload: {
           jobs: {
             stdout: '',
-            editing: jobId
+            editing: jobId,
+            stdoutTrack: true
           },
           labs: {
             editing: labId

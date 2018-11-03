@@ -7,7 +7,8 @@ export default StatusBadge;
 const COLORS = {
   pending: 'blue',
   successful: 'green',
-  failed: 'red'
+  failed: 'red',
+  up: 'green'
 };
 
 function StatusBadge({ value }) {

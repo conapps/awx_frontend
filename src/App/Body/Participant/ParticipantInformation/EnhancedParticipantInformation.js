@@ -25,14 +25,20 @@ const EnhancedParticipantInformation = compose(
         buttonIntent = 'danger';
       }
 
+      if (job.data.status === 'failed') {
+        buttonLabel = 'Destruir';
+        buttonIntent = 'danger';
+      }
+
       if (loading === true) buttonLabel = '...';
 
       return {
-        lastPlaybook: get(job, 'data.name', ''),
+        lastPlaybook: get(participant, 'data.lastPlaybook', ''),
         participant,
         buttonLabel,
         buttonIntent,
-        loading
+        loading,
+        job
       };
     },
     {

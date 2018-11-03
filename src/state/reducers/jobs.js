@@ -9,3 +9,7 @@ export function getActiveJob(state) {
 
   return job;
 }
+
+export function getJob(state, jobId) {
+  return get(state, `entities.jobs.${jobId}`);
+}

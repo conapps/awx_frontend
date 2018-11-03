@@ -22,6 +22,7 @@ import {
   JOBS_STDOUT_UNSUBSCRIBE,
   JOBS_STDOUT_REQUEST,
   JOBS_STDOUT_FAILURE,
+  PARTICIPANTS_UPDATE_SUCCESS,
   ENTITY,
   PARTICIPANTS_INDEX_SUCCESS,
   GET_REQUEST,
@@ -33,6 +34,8 @@ import {
   participants as participantsSchema,
   jobs as jobsSchema
 } from '../schemas.js';
+import { getActiveParticipant } from '../reducers/participants.js';
+import { getActiveJob, getJob } from '../reducers/jobs.js';
 
 /** Constants */
 const INTERVAL = 1000 * 10; /* 10 seconds */
@@ -43,7 +46,9 @@ export default combineEpics(
   success,
   stdoutSuccess,
   stdoutTrack,
+  stdoutSubscibe,
   stdoutSubscription,
+  stdoutUnsubscription,
   stdoutUnsubscribeOnRouteUpdate
 );
 
@@ -52,7 +57,7 @@ function stdoutUnsubscribeOnRouteUpdate($action) {
     mapTo({
       type: MULTI,
       payload: [
-        { type: JOBS_STDOUT_UNSUBSCRIBE },
+        { type: JOBS_STDOUT_UNSUBSCRIBE, payload: 'Route Update' },
         {
           type: UI,
           payload: { jobs: { stdoutTrack: false } }
@@ -62,17 +67,25 @@ function stdoutUnsubscribeOnRouteUpdate($action) {
   );
 }
 
+function stdoutUnsubscription($action) {
+  return $action.ofType(JOBS_STDOUT_UNSUBSCRIBE).pipe(
+    mapTo({
+      type: UI,
+      payload: {
+        jobs: {
+          stdoutSubscribed: false
+        }
+      }
+    })
+  );
+}
+
 function stdoutSubscription($action, $state) {
   return $action.ofType(JOBS_STDOUT_SUBSCRIBE).pipe(
     switchMap(() => {
-      const id = get($state.value, 'ui.jobs.editing', undefined);
-      const participantId = get(
-        $state.value,
-        'ui.participants.editing',
-        undefined
-      );
+      const participant = getActiveParticipant($state.value);
 
-      if (id === undefined) return { type: NOOP };
+      if (participant.data.jobId === undefined) return { type: NOOP };
 
       return observableInterval(INTERVAL).pipe(
         startWith(0),
@@ -80,9 +93,17 @@ function stdoutSubscription($action, $state) {
           type: MULTI,
           payload: [
             {
+              type: UI,
+              payload: {
+                jobs: {
+                  stdoutSubscribed: true
+                }
+              }
+            },
+            {
               type: GET_REQUEST,
               payload: {
-                endpoint: `/jobs/stdout/${id}/`,
+                endpoint: `/jobs/stdout/${participant.data.jobId}/`,
                 uiKey: 'jobsStdout',
                 actionTypes: [
                   JOBS_STDOUT_REQUEST,
@@ -94,11 +115,11 @@ function stdoutSubscription($action, $state) {
             {
               type: GET_REQUEST,
               payload: {
-                endpoint: `/jobs/${id}/`,
-                uiKey: `jobsShow__${id}`,
+                endpoint: `/jobs/${participant.data.jobId}/`,
+                uiKey: `jobsShow__${participant.data.jobId}`,
                 schema: jobsSchema,
                 meta: {
-                  participantId
+                  participantId: participant.id
                 },
                 actionTypes: [
                   JOBS_SHOW_REQUEST,
@@ -136,6 +157,36 @@ function stdoutTrack($action) {
       return {
         type: MULTI,
         payload: actions
+      };
+    })
+  );
+}
+
+function stdoutSubscibe($action, $state) {
+  return $action.ofType(JOBS_STDOUT_SUCCESS, PARTICIPANTS_UPDATE_SUCCESS).pipe(
+    map(() => {
+      const participant = getActiveParticipant($state.value);
+      const job = getJob($state.value, participant.data.jobId);
+      const stdoutTrack = get($state.value, 'ui.jobs.stdoutTrack', false);
+      const stdoutSubscribed = get(
+        $state.value,
+        'ui.jobs.stdoutSubscribed',
+        false
+      );
+      const status = job.data.status;
+
+      if (
+        stdoutTrack === true &&
+        stdoutSubscribed === false &&
+        (status === 'running' || status === 'pending')
+      ) {
+        return {
+          type: JOBS_STDOUT_SUBSCRIBE
+        };
+      }
+
+      return {
+        type: NOOP
       };
     })
   );
@@ -185,8 +236,9 @@ function success($action, $state) {
       if (
         stdoutTrack === true &&
         (status !== 'running' && status !== 'pending')
-      )
-        actions.push({ type: JOBS_STDOUT_UNSUBSCRIBE });
+      ) {
+        actions.push({ type: JOBS_STDOUT_UNSUBSCRIBE, payload: status });
+      }
 
       return {
         type: MULTI,

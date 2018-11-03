@@ -1,6 +1,7 @@
 import React from 'react';
+import get from 'lodash/get.js';
 import { Pane, TextInputField, FormField, Button } from 'evergreen-ui';
-import StatusBadge from '../../StatusBadge/StatusBadge.js';
+import StatusBadge from '../../StatusBadge/EnhancedStatusBadge.js';
 
 export default ParticipantInformation;
 
@@ -10,7 +11,8 @@ function ParticipantInformation({
   buttonIntent,
   onAction,
   lastPlaybook,
-  loading
+  loading,
+  job
 }) {
   return (
     <Pane flex={1} minWidth={300} paddingRight={8}>
@@ -21,7 +23,10 @@ function ParticipantInformation({
           isRequired={true}
           hint="Estado del último comando del Pod"
         >
-          <StatusBadge value={participant.data.status} />
+          <StatusBadge
+            playbook={get(job, 'data.name', '')}
+            value={participant.data.status}
+          />
         </FormField>
         <Button
           appearance="primary"
@@ -33,6 +38,12 @@ function ParticipantInformation({
           {buttonLabel}
         </Button>
       </Pane>
+      <TextInputField
+        label="Participante"
+        type="text"
+        value={participant.data.name}
+        readOnly={true}
+      />
       <TextInputField
         label="Último Playbook"
         type="text"
