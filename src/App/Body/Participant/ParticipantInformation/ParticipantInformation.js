@@ -9,6 +9,7 @@ function ParticipantInformation({
   buttonLabel,
   buttonIntent,
   onAction,
+  lastPlaybook,
   loading
 }) {
   return (
@@ -32,6 +33,12 @@ function ParticipantInformation({
           {buttonLabel}
         </Button>
       </Pane>
+      <TextInputField
+        label="Último Playbook"
+        type="text"
+        value={lastPlaybook}
+        readOnly={true}
+      />
       <TextInputField
         label="AWS Region"
         type="text"

@@ -50,6 +50,10 @@ const EnhancedPodDownDialog = compose(
             payload: {
               participants: {
                 isPodDownDialogOpen: false
+              },
+
+              jobs: {
+                stdout: ''
               }
             }
           },

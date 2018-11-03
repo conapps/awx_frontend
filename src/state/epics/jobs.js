@@ -33,10 +33,9 @@ import {
   participants as participantsSchema,
   jobs as jobsSchema
 } from '../schemas.js';
-import { getActiveJob } from '../reducers/jobs.js';
 
 /** Constants */
-const INTERVAL = 1000 * 30; /* 1 minutes */
+const INTERVAL = 1000 * 10; /* 10 seconds */
 
 export default combineEpics(
   failure,
@@ -67,22 +66,48 @@ function stdoutSubscription($action, $state) {
   return $action.ofType(JOBS_STDOUT_SUBSCRIBE).pipe(
     switchMap(() => {
       const id = get($state.value, 'ui.jobs.editing', undefined);
+      const participantId = get(
+        $state.value,
+        'ui.participants.editing',
+        undefined
+      );
 
       if (id === undefined) return { type: NOOP };
 
       return observableInterval(INTERVAL).pipe(
         startWith(0),
         mapTo({
-          type: GET_REQUEST,
-          payload: {
-            endpoint: `/jobs/stdout/${id}/`,
-            uiKey: 'jobsStdout',
-            actionTypes: [
-              JOBS_STDOUT_REQUEST,
-              JOBS_STDOUT_SUCCESS,
-              JOBS_STDOUT_FAILURE
-            ]
-          }
+          type: MULTI,
+          payload: [
+            {
+              type: GET_REQUEST,
+              payload: {
+                endpoint: `/jobs/stdout/${id}/`,
+                uiKey: 'jobsStdout',
+                actionTypes: [
+                  JOBS_STDOUT_REQUEST,
+                  JOBS_STDOUT_SUCCESS,
+                  JOBS_STDOUT_FAILURE
+                ]
+              }
+            },
+            {
+              type: GET_REQUEST,
+              payload: {
+                endpoint: `/jobs/${id}/`,
+                uiKey: `jobsShow__${id}`,
+                schema: jobsSchema,
+                meta: {
+                  participantId
+                },
+                actionTypes: [
+                  JOBS_SHOW_REQUEST,
+                  JOBS_SHOW_SUCCESS,
+                  JOBS_SHOW_FAILURE
+                ]
+              }
+            }
+          ]
         }),
         takeUntil($action.pipe(ofType(JOBS_STDOUT_UNSUBSCRIBE)))
       );
@@ -90,10 +115,9 @@ function stdoutSubscription($action, $state) {
   );
 }
 
-function stdoutTrack($action, $state) {
+function stdoutTrack($action) {
   return $action.ofType(JOBS_STDOUT_TRACK).pipe(
     map(({ payload }) => {
-      const job = getActiveJob($state.value);
       const actions = [
         {
           type: UI,
@@ -105,11 +129,9 @@ function stdoutTrack($action, $state) {
         }
       ];
 
-      if (job.data.status === 'running') {
-        actions.push({
-          type: JOBS_STDOUT_SUBSCRIBE
-        });
-      }
+      actions.push({
+        type: JOBS_STDOUT_SUBSCRIBE
+      });
 
       return {
         type: MULTI,
@@ -136,24 +158,39 @@ function stdoutSuccess($action) {
   );
 }
 
-function success($action) {
+function success($action, $state) {
   return $action.ofType(JOBS_SHOW_SUCCESS).pipe(
     map(({ payload }) => {
       const id = get(payload, 'result[0]', undefined);
-      const status = get(payload, `entities.jobs.${id}.data.status`, {});
-      const lastPlaybook = get(payload, `entities.jobs.${id}.data.name`, {});
+      const job = get(payload, `entities.jobs.${id}`, {});
+      const status = get(job, `data.status`, {});
+      const lastPlaybook = get(job, `data.name`, {});
       const participantId = get(payload, 'meta.participantId', undefined);
+      const stdoutTrack = get($state.value, 'ui.jobs.stdoutTrack', false);
 
       if (participantId === undefined) return { type: NOOP };
 
-      return {
-        type: ENTITY,
-        payload: {
-          ...normalize(
-            [{ id: participantId, data: { status, lastPlaybook } }],
-            participantsSchema
-          )
+      const actions = [
+        {
+          type: ENTITY,
+          payload: {
+            ...normalize(
+              [{ id: participantId, data: { status, lastPlaybook } }],
+              participantsSchema
+            )
+          }
         }
+      ];
+
+      if (
+        stdoutTrack === true &&
+        (status !== 'running' && status !== 'pending')
+      )
+        actions.push({ type: JOBS_STDOUT_UNSUBSCRIBE });
+
+      return {
+        type: MULTI,
+        payload: actions
       };
     })
   );

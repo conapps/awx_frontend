@@ -3,10 +3,14 @@ import { Badge } from 'evergreen-ui';
 
 export default LastPlaybookBadge;
 
-function LastPlaybookBadge({ color, label, ...props }) {
+function LastPlaybookBadge(props) {
+  const { color, value } = props;
+
+  console.log(props);
+
   return (
-    <Badge color={color} isSolid {...props}>
-      {label}
+    <Badge color={color} isSolid>
+      {value}
     </Badge>
   );
 }

@@ -40,7 +40,7 @@ function ParticipantsTable({ participants }) {
             <Table.TextCell>{participant.data.awsRegion}</Table.TextCell>
             <Table.TextCell isNumber>{participant.data.pod}</Table.TextCell>
             <Table.TextCell>
-              <LastPlaybookBadge label={participant.data.lastPlaybook} />
+              <LastPlaybookBadge value={participant.data.lastPlaybook} />
             </Table.TextCell>
             <Table.TextCell>
               {participant.data.status && (
