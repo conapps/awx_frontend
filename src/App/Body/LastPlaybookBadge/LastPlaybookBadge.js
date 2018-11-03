@@ -6,8 +6,6 @@ export default LastPlaybookBadge;
 function LastPlaybookBadge(props) {
   const { color, value } = props;
 
-  console.log(props);
-
   return (
     <Badge color={color} isSolid>
       {value}
