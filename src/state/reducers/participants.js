@@ -41,3 +41,11 @@ export function getParticipants(state) {
     .filter(item => item !== undefined)
     .filter(item => item.data.labId === labId);
 }
+
+export function getActiveParticipant(state) {
+  const activeParticipanId = get(state, 'ui.participants.editing');
+
+  if (activeParticipanId === undefined) return;
+
+  return get(state, `entities.participants.${activeParticipanId}`, {});
+}

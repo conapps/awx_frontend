@@ -29,8 +29,6 @@ const EnhancedParticipant = compose(
         isReady = isReady && job !== undefined;
       }
 
-      console.log(isReady, job);
-
       return {
         id,
         isReady,

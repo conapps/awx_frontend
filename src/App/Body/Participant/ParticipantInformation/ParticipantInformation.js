@@ -1,20 +1,37 @@
 import React from 'react';
-import { Pane, TextInputField, FormField } from 'evergreen-ui';
+import { Pane, TextInputField, FormField, Button } from 'evergreen-ui';
 import StatusBadge from '../../StatusBadge/StatusBadge.js';
 
 export default ParticipantInformation;
 
-function ParticipantInformation({ participant }) {
+function ParticipantInformation({
+  participant,
+  buttonLabel,
+  buttonIntent,
+  onAction,
+  loading
+}) {
   return (
     <Pane flex={1} minWidth={300} paddingRight={8}>
-      <FormField
-        marginBottom={24}
-        label="Estado"
-        isRequired={true}
-        hint="Estado del último comando del Pod"
-      >
-        <StatusBadge value={participant.data.status} />
-      </FormField>
+      <Pane display="flex" justifyContent="space-between" alignItems="center">
+        <FormField
+          marginBottom={24}
+          label="Estado"
+          isRequired={true}
+          hint="Estado del último comando del Pod"
+        >
+          <StatusBadge value={participant.data.status} />
+        </FormField>
+        <Button
+          appearance="primary"
+          intent={buttonIntent}
+          onClick={onAction}
+          disabled={loading}
+          isLoading={loading}
+        >
+          {buttonLabel}
+        </Button>
+      </Pane>
       <TextInputField
         label="AWS Region"
         type="text"

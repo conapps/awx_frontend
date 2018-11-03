@@ -38,8 +38,7 @@ const EnhancedPodUpDialog = compose(
         type: UI,
         payload: {
           participants: {
-            isPodUpDialogOpen: false,
-            editing: undefined
+            isPodUpDialogOpen: false
           }
         }
       }),
@@ -50,8 +49,7 @@ const EnhancedPodUpDialog = compose(
             type: UI,
             payload: {
               participants: {
-                isPodUpDialogOpen: false,
-                editing: undefined
+                isPodUpDialogOpen: false
               }
             }
           },

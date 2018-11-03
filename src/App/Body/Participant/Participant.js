@@ -4,6 +4,8 @@ import ParticipantLabHeading from './ParticipantLabHeading/EnhancedParticipantLa
 import ParticipantInformation from './ParticipantInformation/EnhancedParticipantInformation.js';
 import JobStdout from './JobStdout/EnhancedJobStdout.js';
 import LabDiagram from './LabDiagram/EnhancedLabDiagram.js';
+import PodUpDialog from '../PodUpDialog/EnhancedPodUpDialog.js';
+import PodDownDialog from '../PodDownDialog/EnhancedPodDownDialog.js';
 
 export default Participant;
 
@@ -20,6 +22,8 @@ function Participant({ isReady, activeTab, onSelectTab }) {
 
   return (
     <Fragment>
+      <PodUpDialog />
+      <PodDownDialog />
       <ParticipantLabHeading />
       <Pane width="100%" display="flex">
         <ParticipantInformation />
