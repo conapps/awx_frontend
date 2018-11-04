@@ -48,7 +48,13 @@ const EnhancedLab = compose(
           labs: {
             editing: id
           },
-          title: `Laboratorios / ${id}`
+          title: `Laboratorios / ${id}`,
+          jobs: {
+            editing: undefined
+          },
+          participants: {
+            editing: undefined
+          }
         }
       }),
       show: id => ({

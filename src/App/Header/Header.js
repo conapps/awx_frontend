@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pane, Heading, Button } from 'evergreen-ui';
+import { Pane, Heading } from 'evergreen-ui';
 
 export default Header;
 
@@ -25,11 +25,7 @@ function Header({ onLogout, title }) {
         display="flex"
         alignItems="center"
         justifyContent="flex-end"
-      >
-        <Button onClick={onLogout} appearance="primary">
-          Cerrar sesión
-        </Button>
-      </Pane>
+      />
     </Pane>
   );
 }

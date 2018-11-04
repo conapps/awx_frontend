@@ -13,6 +13,7 @@ import { normalize } from 'normalizr';
 import {
   ROUTE_UPDATE,
   JOBS_LAUNCH_FAILURE,
+  JOBS_LAUNCH_SUCCESS,
   JOBS_SHOW_REQUEST,
   JOBS_SHOW_SUCCESS,
   JOBS_STDOUT_SUCCESS,
@@ -44,6 +45,7 @@ export default combineEpics(
   failure,
   jobStatus,
   success,
+  jobLaunchSuccess,
   stdoutSuccess,
   stdoutTrack,
   stdoutSubscibe,
@@ -51,6 +53,22 @@ export default combineEpics(
   stdoutUnsubscription,
   stdoutUnsubscribeOnRouteUpdate
 );
+
+function jobLaunchSuccess($action) {
+  return $action.ofType(JOBS_LAUNCH_SUCCESS).pipe(
+    map(({ payload }) => {
+      const id = get(payload, 'result[0]');
+      return {
+        type: UI,
+        payload: {
+          jobs: {
+            editing: id
+          }
+        }
+      };
+    })
+  );
+}
 
 function stdoutUnsubscribeOnRouteUpdate($action) {
   return $action.ofType(ROUTE_UPDATE).pipe(

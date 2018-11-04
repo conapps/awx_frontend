@@ -31,10 +31,19 @@ const EnhancedLabs = compose(
       isSideSheetOpen: get(state, 'ui.labs.isSideSheetOpen', false)
     }),
     {
-      updateHeading: () => ({
+      editUI: () => ({
         type: UI,
         payload: {
-          title: 'Laboratorios'
+          title: 'Laboratorios',
+          labs: {
+            editing: undefined
+          },
+          jobs: {
+            editing: undefined
+          },
+          participants: {
+            editing: undefined
+          }
         }
       }),
       index: () => ({
@@ -110,7 +119,7 @@ const EnhancedLabs = compose(
   lifecycle({
     componentWillMount() {
       this.props.index();
-      this.props.updateHeading();
+      this.props.editUI();
     }
   })
 )(Labs);

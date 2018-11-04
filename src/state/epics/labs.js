@@ -27,7 +27,7 @@ function show($action) {
         payload: {
           title: `Laboratorios / ${lab.data.name}`,
           labs: {
-            editiing: lab.id
+            editing: lab.id
           }
         }
       };
