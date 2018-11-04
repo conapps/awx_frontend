@@ -23,7 +23,6 @@ import {
   JOBS_STDOUT_UNSUBSCRIBE,
   JOBS_STDOUT_REQUEST,
   JOBS_STDOUT_FAILURE,
-  PARTICIPANTS_UPDATE_SUCCESS,
   ENTITY,
   PARTICIPANTS_INDEX_SUCCESS,
   GET_REQUEST,
@@ -36,10 +35,9 @@ import {
   jobs as jobsSchema
 } from '../schemas.js';
 import { getActiveParticipant } from '../reducers/participants.js';
-import { getJob } from '../reducers/jobs.js';
 
 /** Constants */
-const INTERVAL = 1000 * 10; /* 10 seconds */
+const INTERVAL = 1000 * 30; /* 30 seconds */
 
 export default combineEpics(
   failure,
@@ -59,12 +57,20 @@ function jobLaunchSuccess($action) {
     map(({ payload }) => {
       const id = get(payload, 'result[0]');
       return {
-        type: UI,
-        payload: {
-          jobs: {
-            editing: id
+        type: MULTI,
+        payload: [
+          {
+            type: JOBS_STDOUT_SUBSCRIBE
+          },
+          {
+            type: UI,
+            payload: {
+              jobs: {
+                editing: id
+              }
+            }
           }
-        }
+        ]
       };
     })
   );
@@ -181,10 +187,8 @@ function stdoutTrack($action) {
 }
 
 function stdoutSubscibe($action, $state) {
-  return $action.ofType(JOBS_STDOUT_SUCCESS, PARTICIPANTS_UPDATE_SUCCESS).pipe(
+  return $action.ofType(JOBS_STDOUT_SUCCESS).pipe(
     map(() => {
-      const participant = getActiveParticipant($state.value);
-      const job = getJob($state.value, participant.data.jobId);
       const stdoutTrack = get($state.value, 'ui.jobs.stdoutTrack', false);
       const stdoutSubscribed = get(
         $state.value,
@@ -192,13 +196,7 @@ function stdoutSubscibe($action, $state) {
         false
       );
 
-      const status = get(job, 'status.data');
-
-      if (
-        stdoutTrack === true &&
-        stdoutSubscribed === false &&
-        (status === 'running' || status === 'pending')
-      ) {
+      if (stdoutTrack === true && stdoutSubscribed === false) {
         return {
           type: JOBS_STDOUT_SUBSCRIBE
         };
