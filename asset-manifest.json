@@ -1,0 +1,13 @@
+{
+  "main.css": "/awx_frontend/static/css/main.185261b1.chunk.css",
+  "main.js": "/awx_frontend/static/js/main.efa1cbb2.chunk.js",
+  "main.js.map": "/awx_frontend/static/js/main.efa1cbb2.chunk.js.map",
+  "static/js/1.5d70d752.chunk.js": "/awx_frontend/static/js/1.5d70d752.chunk.js",
+  "static/js/1.5d70d752.chunk.js.map": "/awx_frontend/static/js/1.5d70d752.chunk.js.map",
+  "runtime~main.js": "/awx_frontend/static/js/runtime~main.f0d19a27.js",
+  "runtime~main.js.map": "/awx_frontend/static/js/runtime~main.f0d19a27.js.map",
+  "static/css/main.185261b1.chunk.css.map": "/awx_frontend/static/css/main.185261b1.chunk.css.map",
+  "index.html": "/awx_frontend/index.html",
+  "precache-manifest.ad05421fa72aa5d0e6c4a21835d9f565.js": "/awx_frontend/precache-manifest.ad05421fa72aa5d0e6c4a21835d9f565.js",
+  "service-worker.js": "/awx_frontend/service-worker.js"
+}
