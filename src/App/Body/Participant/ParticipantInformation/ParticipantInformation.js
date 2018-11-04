@@ -24,7 +24,7 @@ function ParticipantInformation({
           hint="Estado del último comando del Pod"
         >
           <StatusBadge
-            playbook={get(job, 'data.name', '')}
+            playbook={lastPlaybook}
             value={participant.data.status}
           />
         </FormField>

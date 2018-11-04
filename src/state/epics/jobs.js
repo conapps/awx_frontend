@@ -35,7 +35,7 @@ import {
   jobs as jobsSchema
 } from '../schemas.js';
 import { getActiveParticipant } from '../reducers/participants.js';
-import { getActiveJob, getJob } from '../reducers/jobs.js';
+import { getJob } from '../reducers/jobs.js';
 
 /** Constants */
 const INTERVAL = 1000 * 10; /* 10 seconds */

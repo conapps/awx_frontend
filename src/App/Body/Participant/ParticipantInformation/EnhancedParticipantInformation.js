@@ -20,7 +20,7 @@ const EnhancedParticipantInformation = compose(
       let buttonLabel = 'Iniciar';
       let buttonIntent = 'success';
 
-      if (lab.data.runPlaybook === job.data.name) {
+      if (lab.data.runPlaybook === participant.data.lastPlaybook) {
         buttonLabel = 'Destruir';
         buttonIntent = 'danger';
       }
