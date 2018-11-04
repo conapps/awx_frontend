@@ -22,14 +22,12 @@
     "redux-observable": "^1.0.0",
     "rxjs": "^6.3.3"
   },
-  "homepage": "https://conapps.github.io/awx_frontend",
   "scripts": {
     "start": "REACT_APP_API=https://ansibletower.conatest.click/helpers react-scripts start",
     "build": "REACT_APP_API=https://ansibletower.conatest.click/helpers react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "upload": "aws s3 cp ./build s3://apps-labs-conatest-click/awx_frontend/production --storage-class REDUCED_REDUNDANCY --recursive --acl public-read --metadata-directive REPLACE --expires 2034-01-01T00:00:00Z --cache-control max-age=2592000,public"
   },
   "eslintConfig": {
     "extends": "react-app"

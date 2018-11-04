@@ -64,7 +64,8 @@ const EnhancedPodUpDialog = compose(
               body: {
                 to_email: email,
                 aws_region: awsRegion,
-                lab_pod: +pod
+                lab_pod: +pod,
+                participant_id: id
               },
               meta: {
                 id: id,
