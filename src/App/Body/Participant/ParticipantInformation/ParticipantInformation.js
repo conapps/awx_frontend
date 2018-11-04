@@ -25,7 +25,7 @@ function ParticipantInformation({
         >
           <StatusBadge
             playbook={lastPlaybook}
-            value={participant.data.status}
+            value={get(participant, 'data.status', '')}
           />
         </FormField>
         <Button
