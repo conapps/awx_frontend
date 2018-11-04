@@ -1,14 +1,15 @@
 import './App.css';
 import React from 'react';
-import { Pane, Spinner } from 'evergreen-ui';
+import { Pane /*, Spinner */ } from 'evergreen-ui';
 import Header from './Header/EnhancedHeader.js';
 import EnhancedBody from './Body/Body.js';
-import Login from './Auth/EnhancedLogin.js';
+/*import Login from './Auth/EnhancedLogin.js';*/
 
 class App extends React.Component {
   render() {
+    /*
     const { isAuthenticated, isReady, onLogin, loading, error } = this.props;
-
+    
     if (isAuthenticated === false)
       return (
         <Pane
@@ -26,7 +27,7 @@ class App extends React.Component {
           )}
         </Pane>
       );
-
+    */
     return (
       <Pane>
         <Header />

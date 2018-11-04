@@ -191,7 +191,8 @@ function stdoutSubscibe($action, $state) {
         'ui.jobs.stdoutSubscribed',
         false
       );
-      const status = job.data.status;
+
+      const status = get(job, 'status.data');
 
       if (
         stdoutTrack === true &&
